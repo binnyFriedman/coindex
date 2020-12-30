@@ -1,0 +1,166 @@
+[data-v-f2eb4be4] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.mbox[data-v-f2eb4be4] {
+  max-width: 1280px;
+  margin: 0 auto; }
+
+.title-part[data-v-f2eb4be4] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  -moz-box-pack: justify;
+  justify-content: space-between;
+  padding: 15px; }
+
+.title-part .some-text[data-v-f2eb4be4] {
+  font-size: 24px; }
+
+.mid-table ul[data-v-f2eb4be4] {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #000; }
+
+.mid-table ul li[data-v-f2eb4be4] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  -webkit-align-items: stretch;
+  -moz-box-align: stretch;
+  align-items: stretch;
+  -ms-flex-pack: distribute;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s; }
+
+.mid-table ul li > div[data-v-f2eb4be4] {
+  padding: 10px; }
+
+.mid-table ul li.header[data-v-f2eb4be4] {
+  font-weight: 700;
+  text-align: center; }
+
+.mid-table ul li.header .cell-name[data-v-f2eb4be4] {
+  text-align: center; }
+
+.mid-table .cell-name[data-v-f2eb4be4] {
+  width: 20%;
+  text-align: start;
+  border-right: 1px solid #000; }
+
+.mid-table .mktcap[data-v-f2eb4be4] {
+  width: 19%;
+  border-right: 1px solid #000; }
+
+.mid-table .price[data-v-f2eb4be4], .mid-table .supply[data-v-f2eb4be4], .mid-table .usdVolume[data-v-f2eb4be4] {
+  width: 15%;
+  border-right: 1px solid #000; }
+
+.mid-table .cap24hrChange[data-v-f2eb4be4] {
+  width: 8%;
+  border-right: 1px solid #000; }
+
+.mid-table .trade[data-v-f2eb4be4] {
+  width: 8%; }
+
+.mid-table ul li.down[data-v-f2eb4be4] {
+  -webkit-animation-name: down-data-v-f2eb4be4;
+  -moz-animation-name: down-data-v-f2eb4be4;
+  -o-animation-name: down-data-v-f2eb4be4;
+  animation-name: down-data-v-f2eb4be4; }
+
+.mid-table ul li.up[data-v-f2eb4be4] {
+  -webkit-animation-name: up-data-v-f2eb4be4;
+  -moz-animation-name: up-data-v-f2eb4be4;
+  -o-animation-name: up-data-v-f2eb4be4;
+  animation-name: up-data-v-f2eb4be4; }
+
+.mid-table ul li.up .price[data-v-f2eb4be4] {
+  color: green; }
+
+.mid-table ul li.down .price[data-v-f2eb4be4] {
+  color: red; }
+
+@-webkit-keyframes up-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(31, 126, 31, 0.5); }
+  to {
+    background-color: transparent; } }
+
+@-moz-keyframes up-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(31, 126, 31, 0.5); }
+  to {
+    background-color: transparent; } }
+
+@-o-keyframes up-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(31, 126, 31, 0.5); }
+  to {
+    background-color: transparent; } }
+
+@keyframes up-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(31, 126, 31, 0.5); }
+  to {
+    background-color: transparent; } }
+
+@-webkit-keyframes down-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(196, 65, 65, 0.5); }
+  to {
+    background-color: transparent; } }
+
+@-moz-keyframes down-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(196, 65, 65, 0.5); }
+  to {
+    background-color: transparent; } }
+
+@-o-keyframes down-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(196, 65, 65, 0.5); }
+  to {
+    background-color: transparent; } }
+
+@keyframes down-data-v-f2eb4be4 {
+  0% {
+    background-color: transparent; }
+  10% {
+    background-color: rgba(196, 65, 65, 0.5); }
+  to {
+    background-color: transparent; } }
