@@ -3,3 +3,39 @@
     Author: WebArtG
 
 */
+.flash.transition {
+    -webkit-animation-duration:750ms;
+    animation-duration:750ms;
+    -webkit-animation-name:flash;
+    animation-name:flash
+}
+
+@-webkit-keyframes flash {
+    0%,
+    100%,
+    50% {
+        opacity:1
+    }
+    25%,
+    75% {
+        opacity:0
+    }
+}
+@keyframes flash {
+    0%,
+    100%,
+    50% {
+        opacity:1
+    }
+    25%,
+    75% {
+        opacity:0
+    }
+}
+ .flash{
+transition: background 0.35s ease 0s;
+transition-property: background;
+transition-duration: 0.35s;
+transition-timing-function: ease;
+transition-delay: 0s;
+}

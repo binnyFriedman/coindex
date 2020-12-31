@@ -3,7 +3,9 @@
     // Template Name: Main
     $blog_url= get_bloginfo( 'template_directory' );
 ?>
-
+    <script>
+         window.fetchCoinIds = true;
+    </script>
     <!-- MAIN -->
     <div class="main">
         <!-- add partials here -->
@@ -60,6 +62,9 @@
                                     <div class="name" data-sort="changePercent24Hr"> שינוי 24ש</div>
                                 </div>
                             </div>
+                        </div>
+                        <a class="load-more">
+                            <a href="/all-coins"><span>לכל המטבעות</span></a>
                         </div>
 
                     </div>
