@@ -387,7 +387,7 @@
     display: -moz-box;
     display: -ms-flexbox;
     display: flex; }
-  .table-wrap .convert-table .mktcap {
+  .table-wrap .convert-table .mktcap,.table-wrap .convert-table .usdVolume {
     display: none !important; }
 
   .cab-page .table-wrap .convert-table .mktcap{
@@ -562,10 +562,10 @@
 
   .table-wrap .convert-table .table-row .hidder {display: none !important;  }
 
-  .frontpage .table-wrap .convert-table .cap24hrChange{ display: table-cell !important; width: 25%;  }
-  .frontpage .table-wrap .convert-table .price { width: 25%; }
-  .frontpage .table-wrap .convert-table .long{  width: 40%;  }
-  .frontpage .table-wrap .convert-table .counter { width: 10%;  }
+  .table-wrap .convert-table .cap24hrChange{ display: table-cell !important; width: 25%;  }
+  .table-wrap .convert-table .price { width: 25%; }
+  .table-wrap .convert-table .long{  width: 40%;  }
+  .table-wrap .convert-table .counter { width: 10%;  }
 
   .cab-page .table-wrap .convert-table .price{ display: none; }
 

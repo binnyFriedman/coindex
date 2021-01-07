@@ -156,39 +156,8 @@ $baseApi = "https://api.coincap.io/v2/";
                         <div class="buttons">
                             <div class="contein">
 
-                                <?php if ( get_field('post_short_name_connected_to_api') == 'BTC' || get_field('post_short_name_connected_to_api') == 'ETH' ) : ?>
-
-                                <link rel="stylesheet" href="https://shiftlly.com/widget/popup.css">
 
 
-                                    <a id="shiftllyButton" href="https://shiftlly.com/widget/?lang=he&fromCcy=USD&toCcy=<?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>&primaryColor=%23FFB438&secondaryColor=%234A90E2&amount=500&refId=YqEpJAeV" class="butt type4" onclick="openShiftllyPopup(this);return false;">
-                                        <span>
-                                            קנה
-                                            <?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>
-                                            עכשיו
-                                        </span>
-                                    </a>
-
-                                    <script type="text/template" id="shiftllyModalTemplate"><div class="shiftllyModal-content"><span class="shiftllyModal-close">&times;</span><iframe src="" width="600" height="520" class="shiftlly" scrolling="no"></iframe></div></script><script type="text/javascript">var template = document.getElementById("shiftllyModalTemplate");var modal = document.createElement("div");modal.setAttribute("id", "shiftllyModal");modal.innerHTML = template.innerHTML;document.body.append(modal);var closeButton = document.getElementsByClassName("shiftllyModal-close")[0];closeButton.onclick = function () {modal.style.display = "none";};function openShiftllyPopup (button) {var iframe = modal.getElementsByTagName('iframe')[0];if (iframe.getAttribute("src") !== button.getAttribute("href")) iframe.setAttribute("src", button.getAttribute("href"));modal.style.display = "block";};</script>
-
-
-                                <?php else:?>
-
-                                    <link rel="stylesheet" href="https://shiftlly.com/widget/popup.css">
-
-
-                                    <a id="shiftllyButton" href="https://shiftlly.com/widget/?lang=he&fromCcy=BTC&toCcy=<?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>&primaryColor=%23FFB438&secondaryColor=%234A90E2&amount=1&refId=YqEpJAeV" class="butt type4" onclick="openShiftllyPopup(this);return false;">
-                                        <span>
-                                            קנה
-                                            <?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>
-                                            עכשיו
-                                        </span>
-                                    </a>
-
-                                    <script type="text/template" id="shiftllyModalTemplate"><div class="shiftllyModal-content"><span class="shiftllyModal-close">&times;</span><iframe src="" width="600" height="520" class="shiftlly" scrolling="no"></iframe></div></script><script type="text/javascript">var template = document.getElementById("shiftllyModalTemplate");var modal = document.createElement("div");modal.setAttribute("id", "shiftllyModal");modal.innerHTML = template.innerHTML;document.body.append(modal);var closeButton = document.getElementsByClassName("shiftllyModal-close")[0];closeButton.onclick = function () {modal.style.display = "none";};function openShiftllyPopup (button) {var iframe = modal.getElementsByTagName('iframe')[0];if (iframe.getAttribute("src") !== button.getAttribute("href")) iframe.setAttribute("src", button.getAttribute("href"));modal.style.display = "block";};</script>
-
-
-                                <?php endif; ?>
 
 
                                 <?php if (is_user_logged_in()) : ?>

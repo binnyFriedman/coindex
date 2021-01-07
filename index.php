@@ -63,9 +63,11 @@
                                 </div>
                             </div>
                         </div>
-                        <a class="load-more">
-                            <a href="/all-coins"><span>לכל המטבעות</span></a>
+                        <div class="load-more">
+                        <a class="butt" href="/all-coins">לכל המטבעות</a>
                         </div>
+
+
 
                     </div>
                 </div>

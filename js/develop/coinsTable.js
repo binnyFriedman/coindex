@@ -12,6 +12,7 @@ window.onload = async function () {
     let fetchCoinIds = false;
     if(typeof window.fetchCoinIds!=="undefined" && window.fetchCoinIds===true){
         fetchCoinIds = true;
+        console.log("fetch coin ids",fetchCoinIds)
     }
 
     // Api filters
@@ -93,7 +94,6 @@ window.onload = async function () {
 
         function getCoinImage(coin) {
             if (coin.id && fetchCoinIds===true && coinPosts[coin.id] ) {
-                console.log(fetchCoinIds)
                 const image = coinPosts[coin.id].acf.post_image;
                 return `<div style="display: flex"><img src="${image}" height="30"  /><span style="margin: auto 0.3rem">${coin.name}</span></div>`
             }
@@ -157,7 +157,7 @@ window.onload = async function () {
         table.querySelectorAll(".sort").forEach(function (el) {
             el.addEventListener("click", onSort)
         })
-        table.querySelector(".load-more").addEventListener("click", fetchMore);
+        table.querySelector(".load-more > div.butt").addEventListener("click", fetchMore);
 
 
     }
