@@ -50,16 +50,16 @@
                                     <div class="name no-sorter"> עברית</div>
                                 </div>
                                 <div class="price sort"  >
-                                    <div class="name " data-sort="priceUsd"> מחיר</div>
+                                    <div class="name " data-sort="price"> מחיר</div>
                                 </div>
                                 <div class="mktcap sort"  >
-                                    <div class="name " data-sort="marketCapUsd"> שווי שוק</div>
+                                    <div class="name " data-sort="market_cap"> שווי שוק</div>
                                 </div>
                                 <div class="usdVolume sort"  >
-                                    <div class="name" data-sort="volumeUsd24Hr"> מחזור 24ש</div>
+                                    <div class="name" data-sort="volume_24h"> מחזור 24ש</div>
                                 </div>
                                 <div class="cap24hrChange sort"  >
-                                    <div class="name" data-sort="changePercent24Hr"> שינוי 24ש</div>
+                                    <div class="name" data-sort="percent_change_24h"> שינוי 24ש</div>
                                 </div>
                             </div>
                         </div>

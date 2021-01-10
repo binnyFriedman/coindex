@@ -1,7 +1,8 @@
 <?php get_header(); ?>
 <?php
-$baseApi = "https://api.coincap.io/v2/";
-
+$baseApi = "https://api.coinpaprika.com/v1/";
+$coin_name = str_replace(" ","-", trim(get_field('post_name')));
+$coin_id = strtolower(explode("-",get_field('post_short_name_connected_to_api'))[0]."-".$coin_name);
 ?>
 <?php setPostViews(get_the_ID()); ?>
     <!-- MAIN -->
@@ -10,17 +11,17 @@ $baseApi = "https://api.coincap.io/v2/";
         <script>
             const time =new Date().getTime();
             const secondsInDay = (24*60*60*1000);
-            const coin = location.pathname.replaceAll("\/","");
-            const urlDataText = 'https://api.coincap.io/v2/assets/'+coin;
-            const urlDataGraph = `https://api.coincap.io/v2/assets/${coin}/history?interval=h1&start=${time-(secondsInDay*30)}&end=${time}`;
-            const pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${coin}`)
+            const coinName ='<?php echo $coin_name ?>';
+            const baseApiUrl = '<?php echo $baseApi;?>';
+            const coin = '<?php echo $coin_id; ?>'
+            const urlDataText = baseApiUrl+'tickers/'+coin;
+            const urlDataGraph = `${urlDataText}/historical?start=${getHistorical()}&interval=30m`;
 
-            pricesWs.onmessage = function (msg) {
-                const coinUdate = document.querySelector(`.head-stats .price .value`);
-                const price = JSON.parse(msg.data)
-                if(coinUdate){
-                    coinUdate.innerHTML = "$"+ accounting.formatNumber(price[coin], 3, ",", ".")
-                }
+
+            function getHistorical(){
+                let d= new Date();
+                d.setMonth(d.getMonth()-1);
+                return d.toISOString();
             }
         </script>
 
@@ -216,23 +217,30 @@ $baseApi = "https://api.coincap.io/v2/";
                                             <div class="top-line">
                                                 <div class="links">
                                                     <?php
-                                                        function getParameters($interval,$from,$to=0){
-                                                            $timeInMiliseconds = round(microtime(true) * 1000);
-                                                            $dayInMiisec = (24*60*60)*1000;
+                                                        function buildApiUrl($parameters){
+                                                            global $baseApi,$coin_id;
 
-                                                            $start = $timeInMiliseconds - ($from * $dayInMiisec);
-                                                            $end = $timeInMiliseconds - ($to * $dayInMiisec);
+                                                            return $baseApi."tickers/$coin_id/historical$parameters";
+                                                        }
+                                                        function getParameters($interval,$from){
 
-                                                            return "?interval=$interval&start=$start&end=$end";
+                                                            $start = new DateTime();
+                                                            try {
+                                                                $start = $start->sub(new DateInterval("P" . $from . "D"))->format('Y-m-d');
+                                                            } catch (Exception $e) {
+
+                                                            }
+
+                                                            return "?start=$start&interval=$interval";
                                                         }
 
                                                     ?>
-                                                    <a href="<?php echo $baseApi."assets/".$post->post_name."/history".getParameters("h1",1) ?>" class="day small-butt ">יום</a>
-                                                    <a href="<?php echo $baseApi."assets/".$post->post_name."/history".getParameters("h1",7) ?>" class="day small-butt">שבוע</a>
-                                                    <a href="<?php echo $baseApi."assets/".$post->post_name."/history".getParameters("h2",30) ?>" class="day small-butt active"> חודש</a>
-                                                    <a href="<?php echo $baseApi."assets/".$post->post_name."/history".getParameters("d1",90) ?>" class="day small-butt"> 3 חודשים </a>
-                                                    <a href="<?php echo $baseApi."assets/".$post->post_name."/history".getParameters("d1",180)  ?>" class="day small-butt">6 חודשים</a>
-                                                    <a href="<?php echo $baseApi."assets/".$post->post_name."/history".getParameters("d1",356)  ?>" class="day small-butt"> שנה </a>
+                                                    <a href="<?php echo buildApiUrl(getParameters("1h",1)  );  ?>" class="day small-butt ">יום</a>
+                                                    <a href="<?php echo buildApiUrl(getParameters("1h",7)  );  ?>" class="day small-butt">שבוע</a>
+                                                    <a href="<?php echo buildApiUrl(getParameters("2h",30) );  ?>" class="day small-butt active"> חודש</a>
+                                                    <a href="<?php echo buildApiUrl(getParameters("1d",90) );  ?>" class="day small-butt"> 3 חודשים </a>
+                                                    <a href="<?php echo buildApiUrl(getParameters("1d",180));  ?>" class="day small-butt">6 חודשים</a>
+                                                    <a href="<?php echo buildApiUrl(getParameters("1d",356));  ?>" class="day small-butt"> שנה </a>
                                                 </div>
 
                                             </div>
@@ -240,7 +248,7 @@ $baseApi = "https://api.coincap.io/v2/";
                                                 <div class="name-graph">  גרף <?php the_field('post_name_translate') ?> </div>
                                             </div>
 
-                                            <div id="curve_chart"></div>
+                                            <div id="curve_chart" style="width: 100%;height: 400px"></div>
                                         </div>
 
                                     </div>
@@ -251,7 +259,8 @@ $baseApi = "https://api.coincap.io/v2/";
                                     <div class="siders-wid">
                                         <div class="copytext">
                                             <div class="textarea-place">
-                                                <textarea readonly="" name="text">&lt;div id="coindex-vidjet"&gt;&lt;div id="<?php the_field('post_short_name_connected_to_api') ?>"&gt;&lt;/div&gt;&lt;/div&gt;&lt;script type="text/javascript" src="https://www.coindex.co.il/coindex-vidjet-plugin.js" &gt;&lt;/script&gt;</textarea>
+
+                                                <textarea readonly="" name="text">&lt;div id="coindex-vidjet"&gt;&lt;div id="<?php echo $coin_id; ?>"&gt;&lt;/div&gt;&lt;/div&gt;&lt;script type="text/javascript" src="<?php echo site_url(); ?>/coindex-vidjet-plugin.js" &gt;&lt;/script&gt;</textarea>
                                                 <div class="button-for-copy-row">
                                                     <button class="button-for-copy butt">
                                                         <span> העתק </span>
@@ -260,10 +269,10 @@ $baseApi = "https://api.coincap.io/v2/";
                                             </div>
                                         </div>
                                         <div class="prsentation">
+                                            <script type="text/javascript" src="<?php echo site_url(); ?>/coindex-vidjet-plugin.js"></script>
                                             <div id="coindex-vidjet">
-                                                <div id="<?php the_field('post_short_name_connected_to_api') ?>"></div>
+                                                <div id="<?php echo $coin_id; ?>"></div>
                                             </div>
-                                            <script type="text/javascript" src="/coindex-vidjet-plugin.js"></script>
                                         </div>
                                     </div>
                                 </div>

@@ -1,6 +1,5 @@
 window.onload = async function () {
     const paprikaUrl = "https://api.coinpaprika.com/v1/";
-    const coincapUrl = "https://api.coincap.io/v2/";
 
     const table = document.querySelector("#coins-content");
     // Do not proceed with execution on unrelated pages.
@@ -12,7 +11,6 @@ window.onload = async function () {
     let fetchCoinIds = false;
     if(typeof window.fetchCoinIds!=="undefined" && window.fetchCoinIds===true){
         fetchCoinIds = true;
-        console.log("fetch coin ids",fetchCoinIds)
     }
 
     // Api filters
@@ -44,7 +42,7 @@ window.onload = async function () {
             column.classList.remove("up");
             column.classList.add("down", "active");
         }
-        populateTable(sortTableByKey(key, Object.values(dataObjected), descending))
+        populateTable(sortTableByKey(key, ["quotes","USD"],Object.values(dataObjected).slice(0,limit), descending))
     }
 
     async function fetchHomePosts() {
@@ -53,7 +51,12 @@ window.onload = async function () {
             redirect: 'follow'
         };
         const posts = await fetch(`${location.origin}/wp-json/wp/v2/posts?categories=21&per_page=100`, requestOptions).then(response => response.json())
-        posts.forEach(post => coinPosts[post.acf.post_short_name_connected_to_api] = post);
+
+        posts.forEach(post => {
+            let coinName =  post.acf.post_name.trim().replaceAll(" ","-");
+            let coinId = post.acf.post_short_name_connected_to_api.split("-")[0] +"-" + coinName;
+            coinPosts[coinId] = post
+        });
     }
 
     async function fetchAssets() {
@@ -64,22 +67,28 @@ window.onload = async function () {
             method: 'GET',
             redirect: 'follow'
         };
-        let coin_ids = "";
-        if (Object.keys(coinPosts).length) {
-            coin_ids = `&ids=${Object.keys(coinPosts).join()}`;
-        }
-        fetch(`${coincapUrl}assets?offset=${offset}&limit=${limit}${coin_ids}`, requestOptions)
+
+        fetch(`${paprikaUrl}tickers`, requestOptions)
             .then(response => response.json())
-            .then(({data}) => {
-                data.forEach(coin => {
-                    dataObjected[coin.id] = coin;
+            .then((data) => {
+                let manipulatedData = data;
+                if(Object.keys(coinPosts).length>0){
+                    manipulatedData = data.filter(function (coin){
+                        return !!coinPosts[coin.id];
+
+                    })
+                }
+                manipulatedData.forEach(coin => {
+                    dataObjected[coin.id.split("-")[1]] = coin;
                 })
-                populateTable(data)
-            })
+                populateTable(manipulatedData,limit)
+            }).then(()=>{
+            initWebsocket()
+        })
             .catch(error => console.log('error', error));
     }
 
-    function populateTable(data) {
+    function populateTable(data,limit=100) {
         let populatedHtml = table.querySelector(".table-row").outerHTML;
 
         function getTranslatedColumn(coin) {
@@ -109,13 +118,15 @@ window.onload = async function () {
             return  ""
         }
 
-        data.forEach(function (coin, index) {
+        for (let i = 0; i <= limit&&i<Object.keys(dataObjected).length; i++) {
+            const coin = data[i];
+            const priceData = coin.quotes.USD;
             populatedHtml += `
                   
                     <div class="table-row ">
                             <div class="content">
                                 <div class="counter">
-                                               <div>${index + 1}</div>
+                                               <div>${i + 1}</div>
                                                
                                 </div>
                                 <div class="long">
@@ -127,27 +138,28 @@ window.onload = async function () {
                                                <div>${coin.symbol}</div>
                                 </div>
                                 ${getTranslatedColumn(coin)}
-                                <div class="price" data-coin="${coin.id}">
-                                               <div>${accounting.toFixed(coin.priceUsd, 3)} </div>
+                                <div class="price" data-coin="${coin.id.split("-")[1]}">
+                                               <div>${accounting.toFixed(priceData.price, 3)} </div>
 
                                 </div>
                                 <div class="mktcap">
-                                                <div>${accounting.toFixed(coin.marketCapUsd, 2)} </div>
+                                                <div>${accounting.toFixed(priceData.market_cap, 2)} </div>
 
                                 </div>
                                 <div class="usdVolume">
-                                                <div>${accounting.toFixed(coin.volumeUsd24Hr, 2)} </div>
+                                                <div>${accounting.toFixed(priceData.volume_24h, 2)} </div>
 
                                 </div>
                                 <div class="cap24hrChange">
-                                    <div style="direction: ltr;text-align: right">${accounting.toFixed(coin.changePercent24Hr, 2)}% </div>
+                                    <div style="direction: ltr;text-align: right">${accounting.toFixed(priceData.percent_change_24h, 2)}% </div>
                                 </div>
                             </div>
                         </div>
            
 
             `;
-        });
+        }
+
         if (tableButton) {
 
             populatedHtml += tableButton.outerHTML;
@@ -157,57 +169,81 @@ window.onload = async function () {
         table.querySelectorAll(".sort").forEach(function (el) {
             el.addEventListener("click", onSort)
         })
-        table.querySelector(".load-more > div.butt").addEventListener("click", fetchMore);
+        const loadMoreBtn =  table.querySelector(".load-more > div.butt");
+        if(loadMoreBtn){
+
+            loadMoreBtn.addEventListener("click", fetchMore);
+        }
 
 
     }
 
     await fetchAssets();
 
-    const pricesString = `wss://ws.coincap.io/prices?assets=${Object.keys(coinPosts).length ? Object.keys(coinPosts).join() : "ALL"}`;
-    const pricesWs = new WebSocket(pricesString)
-    //
-    pricesWs.onmessage = function (msg) {
-        for (const [key, value] of Object.entries(JSON.parse(msg.data))) {
-            const coinPrice = table.querySelector(`[data-coin='${key}']`);
-            if (coinPrice) {
-                let oldValue;
-                if (dataObjected && dataObjected[key]) {
-                    oldValue = dataObjected[key].priceUsd;
-                    dataObjected[key] = {
-                        ...dataObjected[key],
-                        priceUsd: value
+
+
+    function initWebsocket(){
+
+        function getAssetsString(){
+            return   Object.keys(dataObjected).join();
+        }
+
+
+        const pricesString = `wss://ws.coincap.io/prices?assets=${Object.keys(coinPosts).length ? getAssetsString() : "ALL"}`;
+        const pricesWs = new WebSocket(pricesString)
+        //
+        pricesWs.onmessage = function (msg) {
+            for (const [key, value] of Object.entries(JSON.parse(msg.data))) {
+                const coinPrice = table.querySelector(`[data-coin='${key}']`);
+                if (coinPrice) {
+                    let oldValue;
+                    if (dataObjected && dataObjected[key]) {
+                        oldValue = dataObjected[key].priceUsd;
+                        dataObjected[key] = {
+                            ...dataObjected[key],
+                            priceUsd: value
+                        }
+                    }
+
+                    coinPrice.innerHTML = `<div>${accounting.toFixed(value, 3)} </div>`;
+                    if (oldValue) {
+                        const upColor = "rgba(24, 198, 131, 0.19) none repeat scroll 0% 0%";
+                        const downColor = "rgba(244, 67, 54, 0.19) none repeat scroll 0% 0%";
+                        priceChangeNotice(coinPrice.parentNode, value > oldValue ? upColor : downColor);
                     }
                 }
+            }
 
-                coinPrice.innerHTML = `<div>${accounting.toFixed(value, 3)} </div>`;
-                if (oldValue) {
-                    const upColor = "rgba(24, 198, 131, 0.19) none repeat scroll 0% 0%";
-                    const downColor = "rgba(244, 67, 54, 0.19) none repeat scroll 0% 0%";
-                    priceChangeNotice(coinPrice.parentNode, value > oldValue ? upColor : downColor);
-                }
+        }
+
+        function priceChangeNotice(element, backgroundColor) {
+            if (element) {
+                element.classList.add("flash", "transition")
+                element.style.background = backgroundColor;
+                setTimeout(function () {
+                    element.classList.remove("flash", "transition")
+
+                    element.style.backgroundColor = "";
+                }, 750)
             }
         }
-
     }
 
-    function priceChangeNotice(element, backgroundColor) {
-        if (element) {
-            element.classList.add("flash", "transition")
-            element.style.background = backgroundColor;
-            setTimeout(function () {
-                element.classList.remove("flash", "transition")
 
-                element.style.backgroundColor = "";
-            }, 750)
-        }
-    }
 
-    function sortTableByKey(key, data, descending) {
+    function sortTableByKey(key,depth, data, descending) {
 
         if (!key) return data;
+
         data.sort(function (a, b) {
-            return descending ? a[key] - b[key] : b[key] - a[key];
+            let a_loc = a, b_loc =b;
+            if(depth&&depth.length){
+                depth.forEach(d=>{
+                    a_loc = a_loc[d];
+                    b_loc = b_loc[d];
+                })
+            }
+            return descending ? a_loc[key] - b_loc[key] : b_loc[key] - a_loc[key];
         })
         return data;
     }
@@ -215,7 +251,8 @@ window.onload = async function () {
 
     function fetchMore() {
         limit += 100;
-        fetchAssets()
+        populateTable(Object.values(dataObjected),limit)
+        // fetchAssets()
     }
 
 

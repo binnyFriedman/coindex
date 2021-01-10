@@ -116,21 +116,15 @@ var getData;
 
 function drawChart() {
 
-    var steak = [['Month', 'Price']];
+    var steak = [['Date', 'מחיר']];
     for (var i = 0; i < getData.length; i++) {
-        //console.log( getData.priceUsd[i][1] );
-        steak[steak.length] = [new Date(getData[i].date), parseFloat(getData[i].priceUsd)];
+        steak[steak.length] = [new Date(getData[i].timestamp), parseFloat(getData[i].price)];
     }
-    //console.log( steak );
     var data = google.visualization.arrayToDataTable(steak);
-    //console.log( data );
 
     var options = {
         chartArea: {
-            left: '0',
-            top: '0',
-            width: '100%',
-            height: '80%'
+            height:'90%'
         },
         title: '',
         colors: ['#F76B1C'],
@@ -139,8 +133,7 @@ function drawChart() {
             titleTextStyle: {color: '#2f2f2f'},
 
         },
-        vAxis: {fontSize: 60},
-        legend: 'none',
+
 
     };
 
@@ -149,43 +142,44 @@ function drawChart() {
 }
 
 $(document).ready(function () {
-
+    let currentPrice =0;
     if ($('#curve_chart').length) {
         $.ajax({
             url: urlDataText,
             method: 'GET',
-            success: function ({data}) {
+            success: function (data) {
+                const priceData = data.quotes.USD;
+                currentPrice = priceData.price;
+                $('.parametr.usdVolume .value').html('$' + accounting.formatNumber(priceData.volume_24h, 0, ",", "."));
+                $('.parametr.vwap_h24 .value').html('' + accounting.formatNumber(priceData.volume_24h_change_24h, 3, ",", "."));
+                $('.parametr.supply .value').html(accounting.formatNumber(data.total_supply, 0, ",", "."));
 
-                $('.parametr.usdVolume .value').html('$' + accounting.formatNumber(data.volumeUsd24Hr, 0, ",", "."));
-                $('.parametr.vwap_h24 .value').html('' + accounting.formatNumber(data.vwap24Hr, 3, ",", "."));
-                $('.parametr.supply .value').html(accounting.formatNumber(data.supply, 0, ",", "."));
-
-                $('.parametr.mktcap .value').html('$' + accounting.formatNumber(data.marketCapUsd, 0, ",", "."));
+                $('.parametr.mktcap .value').html('$' + accounting.formatNumber(priceData.market_cap, 0, ",", "."));
 
                 $('.parametr.rank .value').html(data.rank);
 
-                $('.hidden-stats .price .value').html('$' + accounting.formatNumber(data.priceUsd, 3, ",", "."));
+                $('.hidden-stats .price .value').html('$' + accounting.formatNumber(priceData.price, 3, ",", "."));
 
-                $('.hidden-pop-for-add form input[name=price]').val(data.priceUsd);
+                $('.hidden-pop-for-add form input[name=price]').val(priceData.price);
 
-                $('.head-stats .price .value').html('$' + accounting.formatNumber(data.priceUsd, 3, ",", "."));
-                $('.head-stats .cap24hrChange .value').html(data.changePercent24Hr + '%');
+                $('.head-stats .price .value').html('$' + accounting.formatNumber(priceData.price, 3, ",", "."));
+                const changePercent24hr =accounting.toFixed(priceData.percent_change_24h,5);
+                $('.head-stats .cap24hrChange .value').html(changePercent24hr+'%');
 
-
-                if (data.changePercent24Hr < 0) {
+                if (changePercent24hr < 0) {
 
                     $('.hidden-stats .cap24hrChange .value').addClass('red');
                     $('.head-stats .cap24hrChange .value').addClass('red');
                     $('.parametr.cap24hrChange .value').addClass('red');
 
-                    $('.parametr.cap24hrChange .value').html(data.changePercent24Hr + '%');
-                    $('.hidden-stats .cap24hrChange .value').html(data.changePercent24Hr + '%');
-                    $('.head-stats .cap24hrChange .value').html(data.changePercent24Hr + '%');
+                    $('.parametr.cap24hrChange .value').html(changePercent24hr + '%');
+                    $('.hidden-stats .cap24hrChange .value').html(changePercent24hr + '%');
+                    $('.head-stats .cap24hrChange .value').html(changePercent24hr + '%');
 
                 } else {
-                    $('.parametr.cap24hrChange .value').html('+' + data.changePercent24Hr + '%');
-                    $('.hidden-stats .cap24hrChange .value').html('+' + data.changePercent24Hr + '%');
-                    $('.head-stats .cap24hrChange .value').html('+' + data.changePercent24Hr + '%');
+                    $('.parametr.cap24hrChange .value').html('+' + changePercent24hr + '%');
+                    $('.hidden-stats .cap24hrChange .value').html('+' + changePercent24hr + '%');
+                    $('.head-stats .cap24hrChange .value').html('+' + changePercent24hr + '%');
 
                     $('.hidden-stats .cap24hrChange .value').addClass('green');
                     $('.head-stats .cap24hrChange .value').addClass('green');
@@ -196,14 +190,25 @@ $(document).ready(function () {
         $.ajax({
             url: urlDataGraph,
             method: 'GET',
-            success: function ({data}) {
+            success: function (data) {
                 getData = data;
                 google.charts.load('current', {'packages': ['corechart']});
                 google.charts.setOnLoadCallback(drawChart);
-                drawChart( data );
+                // drawChart( data );
             }
         });
+        const pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${coinName}`)
 
+        pricesWs.onmessage = function (msg) {
+            const price = JSON.parse(msg.data)
+
+            let p = $('.head-stats .price .value');
+
+            $(p).html('$' + accounting.formatNumber(price[coinName], 3, ",", "."));
+            let className = currentPrice>price[coinName]?"#fe5a6e":"#16debb";
+            currentPrice = price[coinName];
+            $(p).css("color",className);
+        }
 
     }
 
@@ -218,14 +223,14 @@ $(document).ready(function () {
             $.ajax({
                 url: curr,
                 method: 'GET',
-                success: function ({data}) {
+                success: function (data) {
                     getData = data;
                     google.charts.load('current', {
                         'packages': ['corechart', 'timeline']
                     });
                     google.charts.load('current', {'packages': ['timeline']});
                     google.charts.setOnLoadCallback(drawChart);
-                    drawChart( data );
+                    // drawChart( data );
                 }
             });
         }
