@@ -54,7 +54,7 @@ window.onload = async function () {
 
         posts.forEach(post => {
             let coinName =  post.acf.post_name.trim().replaceAll(" ","-");
-            let coinId = post.acf.post_short_name_connected_to_api.split("-")[0] +"-" + coinName;
+            let coinId = post.acf.post_short_name_connected_to_api.split("-")[0] +"-" + coinName.toLowerCase();
             coinPosts[coinId] = post
         });
     }
@@ -81,7 +81,7 @@ window.onload = async function () {
                 manipulatedData.forEach(coin => {
                     dataObjected[coin.id.split("-")[1]] = coin;
                 })
-                populateTable(manipulatedData,limit)
+                populateTable(manipulatedData,limit);
             }).then(()=>{
             initWebsocket()
         })
