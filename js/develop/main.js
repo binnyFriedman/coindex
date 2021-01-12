@@ -9,7 +9,10 @@ $(document).ready(function () {
     //$("").stick_in_parent();
   }
 
-  $("select").select2();
+  $("select").select2({
+    dir: "rtl",
+
+  });
 
   /* tabs */
 

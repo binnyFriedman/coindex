@@ -334,13 +334,24 @@
                             </svg>
                             </a>
                         </div>
-                        <div class="search-part">
-                            <form action="/" class="searchform">
-                                <div class="inputer">
-                                    <input type="text" placeholder="חפש מטבע" name="search"  value="<?php echo isset($_GET["search"])?$_GET["search"]:""; ?>" required="required">
-                                </div>
-                            </form>
-                        </div>
+                        <script >
+                            function getCurrencys(){
+                                const currencys = fetch("currencys.json");
+
+                            }
+                            function onSelectCurrency(selected){
+
+                            }
+
+                        </script>
+                        <label for="currencySelector" >
+                             מטבע
+                        <select id="currencySelector" class="currency" style="width: 4rem">
+                            <option>USD</option>
+                            <option>ILS</option>
+                        </select>
+                        </label>
+
                     </div>
 
                     <?php if ( is_user_logged_in() ) :?>
@@ -349,20 +360,6 @@
                         ?>
 
                         <div class="user-part logined" >
-                            <div class="hidden-search">
-                                <div class="butt">
-                                    <svg viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                        <g id="Canvas" transform="translate(371 -21)">
-                                            <g id="Vector">
-                                                <use xlink:href="#path0_fill" transform="translate(-371 21)" fill="#000"></use>
-                                            </g>
-                                        </g>
-                                        <defs>
-                                            <path id="path0_fill" d="M 27.6626 26.0705L 20.0246 18.5208C 21.6373 16.5689 22.6005 14.0561 22.6005 11.3189C 22.6005 5.07051 17.5383 0 11.3002 0C 5.06214 0 0 5.07051 0 11.3189C 0 17.5673 5.06214 22.6378 11.3002 22.6378C 14.0105 22.6378 16.4856 21.6843 18.4343 20.1026L 26.0947 27.6747C 26.3075 27.8878 26.5987 28 26.8786 28C 27.1698 28 27.461 27.8878 27.6738 27.6635C 28.1106 27.2147 28.1106 26.508 27.6626 26.0705ZM 2.23989 11.3189C 2.23989 6.31571 6.30528 2.24359 11.3002 2.24359C 16.2952 2.24359 20.3606 6.31571 20.3606 11.3189C 20.3606 16.3221 16.2952 20.3942 11.3002 20.3942C 6.30528 20.3942 2.23989 16.3221 2.23989 11.3189Z"></path>
-                                        </defs>
-                                    </svg>
-                                </div>
-                            </div>
 
                             <?php wp_nav_menu(array('menu'=> 5, 'menu_class' => '', 'container' => false )); ?>
 
@@ -445,20 +442,6 @@
                     <?php else: ?>
 
                         <div class="user-part not-logined">
-                            <div class="hidden-search">
-                                <div class="butt">
-                                    <svg viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                        <g id="Canvas" transform="translate(371 -21)">
-                                            <g id="Vector">
-                                                <use xlink:href="#path0_fill" transform="translate(-371 21)" fill="#000"></use>
-                                            </g>
-                                        </g>
-                                        <defs>
-                                            <path id="path0_fill" d="M 27.6626 26.0705L 20.0246 18.5208C 21.6373 16.5689 22.6005 14.0561 22.6005 11.3189C 22.6005 5.07051 17.5383 0 11.3002 0C 5.06214 0 0 5.07051 0 11.3189C 0 17.5673 5.06214 22.6378 11.3002 22.6378C 14.0105 22.6378 16.4856 21.6843 18.4343 20.1026L 26.0947 27.6747C 26.3075 27.8878 26.5987 28 26.8786 28C 27.1698 28 27.461 27.8878 27.6738 27.6635C 28.1106 27.2147 28.1106 26.508 27.6626 26.0705ZM 2.23989 11.3189C 2.23989 6.31571 6.30528 2.24359 11.3002 2.24359C 16.2952 2.24359 20.3606 6.31571 20.3606 11.3189C 20.3606 16.3221 16.2952 20.3942 11.3002 20.3942C 6.30528 20.3942 2.23989 16.3221 2.23989 11.3189Z"></path>
-                                        </defs>
-                                    </svg>
-                                </div>
-                            </div>
 
                             <?php wp_nav_menu(array('menu'=> 5, 'menu_class' => '', 'container' => false )); ?>
 
@@ -493,13 +476,7 @@
             <div class="hidden-menu">
                 <div class="convert">
                     <div class="top-part">
-                        <div class="search-part">
-                            <form action="/" class="searchform">
-                                <div class="inputer">
-                                    <input type="text" placeholder="חפש מטבע" name="search" value="<?php echo isset($_GET["search"])??""; ?>">
-                                </div>
-                            </form>
-                        </div>
+
                         <ul>
                             <?php if ( is_user_logged_in() ) :?>
                                 <li>
