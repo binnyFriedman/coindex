@@ -48,7 +48,7 @@ body
 /* header */
 header {
   position: relative;
-  z-index: 2; }
+  z-index: 1; }
 
 #topper-line {
   border-top: 1px solid #DCDCDC;
@@ -1459,7 +1459,7 @@ footer {
 /* tabs-wrap */
 .tabs-wrap .navigate-tabs {
   position: relative;
-  z-index: 2; }
+  z-index: 1; }
   .tabs-wrap .navigate-tabs ul {
     list-style: none;
     padding: 0;

@@ -3,11 +3,19 @@
 <?php get_header(); ?>
 <?php
 // Template Name: Cabinet
+$baseApi = "https://api.coinpaprika.com/v1/";
 $blog_url= get_bloginfo( 'template_directory' );
 ?>
     <script>
-        var urlDataText = 'http://coincap.io/page/BTC';
-        var urlDataGraph = 'http://coincap.io/history/30day/BTC';
+        var urlDataText = '<?php echo $baseApi; ?>tickers/btc-bitcoin';
+        var urlDataGraph = `${urlDataText}/historical?start=${getHistorical()}&interval=30m`;
+
+
+        function getHistorical(){
+            let d= new Date();
+            d.setMonth(d.getMonth()-1);
+            return d.toISOString();
+        }
     </script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -40,12 +48,31 @@ $blog_url= get_bloginfo( 'template_directory' );
             <div class="drowing">
                 <div class="top-line">
                     <div class="links">
-                        <a href="/1day/" class="day small-butt ">Today</a>
-                        <a href="/7day/" class="day small-butt">1W</a>
-                        <a href="/30day/" class="day small-butt active">1M</a>
-                        <a href="/90day/" class="day small-butt">3M</a>
-                        <a href="/180day/" class="day small-butt">6M</a>
-                        <a href="/365day/" class="day small-butt">1Y</a>
+                        <?php
+                        function buildApiUrl($parameters){
+                            global $baseApi,$coin_id;
+
+                            return $baseApi."tickers/$coin_id/historical$parameters";
+                        }
+                        function getParameters($interval,$from){
+
+                            $start = new DateTime();
+                            try {
+                                $start = $start->sub(new DateInterval("P" . $from . "D"))->format('Y-m-d');
+                            } catch (Exception $e) {
+
+                            }
+
+                            return "?start=$start&interval=$interval";
+                        }
+
+                        ?>
+                        <a href="<?php echo buildApiUrl(getParameters("1h",1)  );  ?>" class="day small-butt ">יום</a>
+                        <a href="<?php echo buildApiUrl(getParameters("1h",7)  );  ?>" class="day small-butt">שבוע</a>
+                        <a href="<?php echo buildApiUrl(getParameters("2h",30) );  ?>" class="day small-butt active"> חודש</a>
+                        <a href="<?php echo buildApiUrl(getParameters("1d",90) );  ?>" class="day small-butt"> 3 חודשים </a>
+                        <a href="<?php echo buildApiUrl(getParameters("1d",180));  ?>" class="day small-butt">6 חודשים</a>
+                        <a href="<?php echo buildApiUrl(getParameters("1d",356));  ?>" class="day small-butt"> שנה </a>
                     </div>
                 </div>
                 <div class="topper-graph">

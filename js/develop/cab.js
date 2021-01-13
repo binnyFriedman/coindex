@@ -47,6 +47,8 @@ var steakTime = [];
 var date = '';
 var countsDays = 1;
 
+
+
 function getParams( item , date , index2 , counter  ){
     var urlGet = 'http://coincap.io/history'
     var dataGet;

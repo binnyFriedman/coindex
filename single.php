@@ -2,7 +2,8 @@
 <?php
 $baseApi = "https://api.coinpaprika.com/v1/";
 $coin_name = strtolower(str_replace(" ","-", trim(get_field('post_name'))));
-$coin_id = strtolower(explode("-",get_field('post_short_name_connected_to_api'))[0]."-".$coin_name);
+$coin_symbol = strtolower(explode("-",get_field('post_short_name_connected_to_api'))[0]);
+$coin_id = $coin_symbol."-".$coin_name;
 ?>
 <?php setPostViews(get_the_ID()); ?>
     <!-- MAIN -->
@@ -157,10 +158,13 @@ $coin_id = strtolower(explode("-",get_field('post_short_name_connected_to_api'))
                         <div class="buttons">
                             <div class="contein">
 
+                                <script src="https://changelly.com/static/payment-button-widget/widget-modal.js"></script>
+                                <iframe src="https://changelly.com/static/payment-button-widget/index.html?paymentButtonTheme=desert&buttonTextId=002&widgetLink=https%3A%2F%2Fwidget.changelly.com%3Ffrom%3Dbtc%252Cusd%26to%3D*%26amount%3D1000%26address%3D%26fromDefault%3Dusd%26toDefault%3D<?php echo $coin_symbol;?>%26theme%3Ddefault%26merchant_id%3Di3ff3bxfjcosysmt%26payment_id%3D%26v%3D3&isPopUp=true" width="180" height="48" frameborder="0"></iframe>
+                                <link rel="stylesheet" href="https://changelly.com/static/payment-button-widget/widget-modal.css"/>
+                                <div id="changellyModal"></div>
 
-
-
-
+                            </div>
+                                <br>
                                 <?php if (is_user_logged_in()) : ?>
 
                                     <?php if($connect) : ?>
@@ -309,51 +313,12 @@ $coin_id = strtolower(explode("-",get_field('post_short_name_connected_to_api'))
 
                             </div>
 
-                            <div class="row-bye">
-                                <?php if ( get_field('post_short_name_connected_to_api') == 'BTC' || get_field('post_short_name_connected_to_api') == 'ETH' ) : ?>
+                            <div class="row-bye" style="direction: ltr">
+                                <iframe src="https://changelly.com/static/payment-button-widget/index.html?paymentButtonTheme=desert&buttonTextId=002&widgetLink=https%3A%2F%2Fwidget.changelly.com%3Ffrom%3Dbtc%252Cusd%26to%3D*%26amount%3D1000%26address%3D%26fromDefault%3Dusd%26toDefault%3D<?php echo $coin_symbol;?>%26theme%3Ddefault%26merchant_id%3Di3ff3bxfjcosysmt%26payment_id%3D%26v%3D3&isPopUp=true" width="180" height="48" frameborder="0"></iframe>
 
-                                    <!--
-                                    <a href="https://www.coinmama.com/?ref=shay" target="_blank" >
-                                        <span> קנה <?php the_field('post_name') ?>   </span>
-                                    </a>
-                                    -->
-
-                                    <a id="shiftllyButton" href="https://shiftlly.com/widget/?lang=he&fromCcy=USD&toCcy=<?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>&primaryColor=%23FFB438&secondaryColor=%234A90E2&amount=500&refId=YqEpJAeV" onclick="openShiftllyPopup(this);return false;">
-                                        <span>
-                                            קנה
-                                            <?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>
-                                            עכשיו
-                                        </span>
-                                    </a>
-
-
-                                <?php else:?>
-
-                                    <!--
-                                    <a data-fancybox="" data-src="#pop-bye" href="javascript:;" class="butt type4">
-                                        <span> קנה <?php the_field('post_name') ?>   </span>
-                                    </a>
-                                -->
-
-                                    <a id="shiftllyButton" href="https://shiftlly.com/widget/?lang=he&fromCcy=BTC&toCcy=<?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>&primaryColor=%23FFB438&secondaryColor=%234A90E2&amount=1&refId=YqEpJAeV" onclick="openShiftllyPopup(this);return false;">
-                                        <span>
-                                            קנה
-                                            <?php echo strtoupper( get_field('post_short_name_connected_to_api') ); ?>
-                                            עכשיו
-                                        </span>
-                                    </a>
-
-
-                                <?php endif; ?>
-
-                                <!--
-                                <a data-fancybox="" data-src="#pop-bye" href="javascript:;"> קנה <?php  the_field('post_name' ) ?> </a>
-                                -->
                             </div>
 
-                            <div class="row-after-all create-next-button">
-                                <a data-curmin="<?php the_field('post_short_name_connected_to_api'); ?>" href="https://www.coindex.co.il/" rel="next">למעבר למטבע הבא</a>
-                            </div>
+
                             <div class="texter">
                                 <p>חשוב לדעת: כל ההסברים על המטבעות השונים מבוססים על פרסומים של יוצריהם. אין לראות במידע כהמלצה, או כייעוץ.השימוש באתר על אחיות המשתמש/ת בלבד.</p>
 
@@ -373,144 +338,5 @@ $coin_id = strtolower(explode("-",get_field('post_short_name_connected_to_api'))
 
     </div>
     <!-- /MAIN -->
-
-    <div class="hidden-block">
-
-        <div id="pop-bye" class="curr-class">
-            <div class="cont">
-                <div class="title-part">
-                    <h3>
-                        עליך להחזיק ארנק ביטקויין, על מנת שתוכל לקנות מטבע מסוג <?php the_field('post_name') ?>
-                    </h3>
-                </div>
-                <div class="buttons-row">
-
-                    <?php if (get_field('post_short_name_connected_to_api' ) == 'BTC' ) : ?>
-
-                        <a href="https://www.coinmama.com/?ref=shay" class="butt type2" target="_blank">
-                            <span>  להמרת ביטקויין ל<?php  the_field('post_name' ) ?></span>
-                        </a>
-
-                    <?php else :?>
-
-                        <a  href="https://changelly.com/?ref_id=f9f7373bf362" class="butt type2" target="_blank">
-                            <span>  להמרת ביטקויין ל<?php  the_field('post_name' ) ?></span>
-                        </a>
-                        <a href="https://www.coinmama.com/?ref=shay" class="butt type3" target="_blank">
-                            <span> להמרת ש״ח לביטקויין </span>
-                        </a>
-
-                    <?php endif;?>
-
-                </div>
-            </div>
-        </div>
-
-        <div id="find-error" class="curr-class" >
-            <div class="cont">
-                <div class="title-part">
-                    <h3>מצאת טעות? כתוב לנו</h3>
-                </div>
-                <form action="" class="contein-popup form-part">
-                    <input type="hidden" name="action" value="send_mail">
-                    <div class="inputer">
-                        <input type="text" required name="name" value="" placeholder="שם (לא חובה)">
-                    </div>
-                    <div class="inputer">
-                        <textarea name="error" placeholder="פירוט הטעות שמצאת" required ></textarea>
-                    </div>
-                    <div class="submiter">
-                        <button class="butt type2">
-                            <span>שלח</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div id="call_success" class="popup curr-class">
-            <div class="call-success contein-popup">
-                <div class="call_success">
-                    <div class="call-title">
-                        תודה רבה על העזרה!
-                        <br />
-                        ננסה להשתפר
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-<?php if (is_user_logged_in()) : ?>
-
-    <div class="hidden-pop-for-add" style="display: none;">
-        
-
-        <div class="contein-for-custom">
-            <div id="popup-add" class="curr-class">
-                <div class="closer-pop"><span></span> <span></span></div>
-                <form class="cont errorForm conteiner-pop">
-                    <input type="hidden" name="apiname" value="<?php the_field('post_short_name_connected_to_api') ?>">
-                    <input type="hidden" name="price" value="" >
-
-                    <div class="title-part"><h3>  הזן כמות מניות <span> <?php the_field('post_short_name_connected_to_api') ?> </span></h3></div>
-                    <div class="form-part">
-                        <div class="inputer">
-                            <input type="text" name="count">
-                        </div>
-                        <div class="submiter"><button class="butt type2"><span>שמור</span></button></div>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-    </div>
-<!--
-    <div class="hidden-pop-for-add" style="display: none;">
-        <form class="conteiner-pop">
-            <input type="hidden" name="apiname" value="<?php the_field('post_short_name_connected_to_api') ?>">
-            <input type="hidden" name="price" value="" >
-            <div class="closer-pop">
-                <span></span>
-                <span></span>
-            </div>
-            <div class="title-line">
-                <span>   הזן מספר מטבעות
-                </span> <?php the_field('post_short_name_connected_to_api') ?>
-            </div>
-            <div class="former-part">
-                <input type="text" name="count">
-            </div>
-            <div class="submiter">
-                <button type="submit" class="butt"> שמור </button>
-            </div>
-        </form>
-    </div>
--->
-
-    <div id="remove-popup" class="curr-class" style="display: none;">
-
-        <div class="cont">
-            <div class="title-part">
-                <h3>
-                האם אתה בטוח שאתה רוצה להסיר   <?php the_field('post_name') ?>
-                </h3>
-            </div>
-            <div class="chooser buttons-row">
-
-                <a href="#" class="butt type2 delete">
-                    <span> כן </span>
-                </a>
-                <a href="#" class="butt type3 close-popup">
-                    <span> לא </span>
-                </a>
-
-            </div>
-        </div>
-
-    </div>
-
-<?php endif;?>
 
 <?php get_footer(); ?>
