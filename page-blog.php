@@ -32,7 +32,7 @@ $blog_url= get_bloginfo( 'template_directory' );
                         'post_status' => 'publish',
                         'paged' =>  1,
                         'posts_per_page' => 5,
-                        'caller_get_posts'=> 1
+                        'ignore_sticky_posts'=> 1
                     );
                     
                     $query = new WP_Query( $args );
@@ -45,7 +45,7 @@ $blog_url= get_bloginfo( 'template_directory' );
                             <a href="<?php echo get_permalink(); ?>" class="single">
 
                                 <?php
-                                    $thumbnail_attributes = wp_get_attachment_image_src( get_post_thumbnail_id( $post_->ID  ), 'full' );
+                                    $thumbnail_attributes = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID()  ), 'full' );
                                 ?>
                                 <div class="con" <?php if(  $thumbnail_attributes == '' ){ echo 'style="background-color: #ccc;"';}; ?> >
                                     <img src="<?php echo $thumbnail_attributes[0]; ?>" alt="">
@@ -53,7 +53,7 @@ $blog_url= get_bloginfo( 'template_directory' );
                                 <div class="texter">
                                     <div class="name"> <?php the_title() ?> </div>
                                     <!--
-                                    <p> <?php the_field('short_text_news', $post_->ID ); ?></p>
+                                    <p> <?php the_field('short_text_news', get_the_ID() ); ?></p>
                                     -->
                                 </div>
                             </a>

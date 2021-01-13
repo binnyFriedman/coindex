@@ -157,36 +157,11 @@ $coin_id = $coin_symbol."-".$coin_name;
                         </div>
                         <div class="buttons">
                             <div class="contein">
-
                                 <script src="https://changelly.com/static/payment-button-widget/widget-modal.js"></script>
                                 <iframe src="https://changelly.com/static/payment-button-widget/index.html?paymentButtonTheme=desert&buttonTextId=002&widgetLink=https%3A%2F%2Fwidget.changelly.com%3Ffrom%3Dbtc%252Cusd%26to%3D*%26amount%3D1000%26address%3D%26fromDefault%3Dusd%26toDefault%3D<?php echo $coin_symbol;?>%26theme%3Ddefault%26merchant_id%3Di3ff3bxfjcosysmt%26payment_id%3D%26v%3D3&isPopUp=true" width="180" height="48" frameborder="0"></iframe>
                                 <link rel="stylesheet" href="https://changelly.com/static/payment-button-widget/widget-modal.css"/>
                                 <div id="changellyModal"></div>
-
                             </div>
-                                <br>
-                                <?php if (is_user_logged_in()) : ?>
-
-                                    <?php if($connect) : ?>
-                                        <div class=" butt-to-remove">
-                                            <a  data-fancybox="" data-src="#remove-popup" href="javascript:;" class="butt type5"><span>הסר מתיק אישי</span></a>
-                                        </div>
-                                    <?php else : ?>
-                                        <div class="butt-to-add">
-                                            <a href="javascript:;" class="butt type6"><span>הוסף לתיק אישי</span></a>
-                                        </div>
-                                    <?php endif;?>
-                                <?php endif;?>
-
-                                <?php if ( !is_user_logged_in()) : ?>
-
-
-                                    <div class="butt-to-add">
-                                        <a data-fancybox="" data-src="#popup-login" href="javascript:;" class="butt type5"><span>הוסף לתיק אישי</span></a>
-                                    </div>
-
-                                <?php endif;?>
-
                             </div>
                         </div>
                     </div>

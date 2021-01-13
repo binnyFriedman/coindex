@@ -563,7 +563,7 @@
   .table-wrap .convert-table .table-row .hidder {display: none !important;  }
 
   .table-wrap .convert-table .cap24hrChange{ display: table-cell !important; width: 25%;  }
-  .table-wrap .convert-table .price { width: 25%; }
+  .table-wrap .convert-table .price { width: 30%; }
   .table-wrap .convert-table .long{  width: 40%;  }
   .table-wrap .convert-table .counter { width: 10%;  }
 
@@ -834,7 +834,12 @@
   }
 
   .head-row .simple-part {
-    max-width: 120px;
+    max-width: 245px;
+
+  }
+  .head-row .simple-part label {
+   text-align: center;
+   margin-right: 2rem;
   }
 
 
