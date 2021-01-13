@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 <?php
 $baseApi = "https://api.coinpaprika.com/v1/";
-$coin_name = str_replace(" ","-", trim(get_field('post_name')));
+$coin_name = strtolower(str_replace(" ","-", trim(get_field('post_name'))));
 $coin_id = strtolower(explode("-",get_field('post_short_name_connected_to_api'))[0]."-".$coin_name);
 ?>
 <?php setPostViews(get_the_ID()); ?>

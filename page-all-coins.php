@@ -62,7 +62,7 @@ $blog_url= get_bloginfo( 'template_directory' );
                         </div>
                         </div>
                         <div class="load-more">
-                            <div class="butt"><span>הצג 100 נוספים</span></div>
+                            <div class="load-more butt"><span>הצג 100 נוספים</span></div>
                         </div>
                     </div>
                 </div>

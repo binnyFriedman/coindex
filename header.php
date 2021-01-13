@@ -334,21 +334,10 @@
                             </svg>
                             </a>
                         </div>
-                        <script >
-                            function getCurrencys(){
-                                const currencys = fetch("currencys.json");
-
-                            }
-                            function onSelectCurrency(selected){
-
-                            }
-
-                        </script>
                         <label for="currencySelector" >
                              מטבע
                         <select id="currencySelector" class="currency" style="width: 4rem">
-                            <option>USD</option>
-                            <option>ILS</option>
+
                         </select>
                         </label>
 

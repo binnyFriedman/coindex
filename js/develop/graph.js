@@ -114,11 +114,18 @@ function moneyFormat(n) {
 
 var getData;
 
+let currency = {
+    id:"USD",
+    rate:"1",
+    text:"USD",
+    symbol:"$"
+};
+
 function drawChart() {
 
     var steak = [['Date', 'מחיר']];
     for (var i = 0; i < getData.length; i++) {
-        steak[steak.length] = [new Date(getData[i].timestamp), parseFloat(getData[i].price)];
+        steak[steak.length] = [new Date(getData[i].timestamp),convertToCurrency( parseFloat(getData[i].price))];
     }
     var data = google.visualization.arrayToDataTable(steak);
 
@@ -143,68 +150,100 @@ function drawChart() {
 
 $(document).ready(function () {
     let currentPrice =0;
+    let rawData = {}
+
+
+    // add cookie for default currency
+
+    if(typeof window.currentCurrency!=='undefined' && window.currentCurrency){
+        currency = window.currentCurrency;
+    }
+
+    document.addEventListener('currencyChange',function (){
+        currency = window.currentCurrency;
+        populateCoinFields(rawData);
+        updateChart(getData);
+    })
+
+    function populateCoinFields(data) {
+            let formatMoneyConfig = {
+                symbol: currency.symbol
+            }
+            const priceData = data.quotes.USD;
+            currentPrice = priceData.price;
+            let displayPrice = convertToCurrency(currentPrice);
+            $('.parametr.usdVolume .value').html(accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig));
+            $('.parametr.vwap_h24 .value').html('' + accounting.formatNumber(priceData.volume_24h_change_24h, 3, ",", "."));
+            $('.parametr.supply .value').html(accounting.formatNumber(data.total_supply, 0, ",", "."));
+
+            $('.parametr.mktcap .value').html( accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig));
+
+            $('.parametr.rank .value').html(data.rank);
+
+            $('.hidden-stats .price .value').html(accounting.formatMoney(displayPrice, formatMoneyConfig));
+
+            $('.hidden-pop-for-add form input[name=price]').val(displayPrice);
+
+            $('.head-stats .price .value').html(accounting.formatMoney(displayPrice,formatMoneyConfig));
+            const changePercent24hr =accounting.toFixed(priceData.percent_change_24h,5);
+            $('.head-stats .cap24hrChange .value').html(changePercent24hr+'%');
+
+            if (changePercent24hr < 0) {
+
+                $('.hidden-stats .cap24hrChange .value').addClass('red');
+                $('.head-stats .cap24hrChange .value').addClass('red');
+                $('.parametr.cap24hrChange .value').addClass('red');
+
+                $('.parametr.cap24hrChange .value').html(changePercent24hr + '%');
+                $('.hidden-stats .cap24hrChange .value').html(changePercent24hr + '%');
+                $('.head-stats .cap24hrChange .value').html(changePercent24hr + '%');
+
+            } else {
+                $('.parametr.cap24hrChange .value').html('+' + changePercent24hr + '%');
+                $('.hidden-stats .cap24hrChange .value').html('+' + changePercent24hr + '%');
+                $('.head-stats .cap24hrChange .value').html('+' + changePercent24hr + '%');
+
+                $('.hidden-stats .cap24hrChange .value').addClass('green');
+                $('.head-stats .cap24hrChange .value').addClass('green');
+                $('.parametr.cap24hrChange .value').addClass('green');
+            }
+    }
+
+    function updateChart(data){
+        getData = data;
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+    }
+
     if ($('#curve_chart').length) {
         $.ajax({
             url: urlDataText,
             method: 'GET',
             success: function (data) {
-                const priceData = data.quotes.USD;
-                currentPrice = priceData.price;
-                $('.parametr.usdVolume .value').html('$' + accounting.formatNumber(priceData.volume_24h, 0, ",", "."));
-                $('.parametr.vwap_h24 .value').html('' + accounting.formatNumber(priceData.volume_24h_change_24h, 3, ",", "."));
-                $('.parametr.supply .value').html(accounting.formatNumber(data.total_supply, 0, ",", "."));
-
-                $('.parametr.mktcap .value').html('$' + accounting.formatNumber(priceData.market_cap, 0, ",", "."));
-
-                $('.parametr.rank .value').html(data.rank);
-
-                $('.hidden-stats .price .value').html('$' + accounting.formatNumber(priceData.price, 3, ",", "."));
-
-                $('.hidden-pop-for-add form input[name=price]').val(priceData.price);
-
-                $('.head-stats .price .value').html('$' + accounting.formatNumber(priceData.price, 3, ",", "."));
-                const changePercent24hr =accounting.toFixed(priceData.percent_change_24h,5);
-                $('.head-stats .cap24hrChange .value').html(changePercent24hr+'%');
-
-                if (changePercent24hr < 0) {
-
-                    $('.hidden-stats .cap24hrChange .value').addClass('red');
-                    $('.head-stats .cap24hrChange .value').addClass('red');
-                    $('.parametr.cap24hrChange .value').addClass('red');
-
-                    $('.parametr.cap24hrChange .value').html(changePercent24hr + '%');
-                    $('.hidden-stats .cap24hrChange .value').html(changePercent24hr + '%');
-                    $('.head-stats .cap24hrChange .value').html(changePercent24hr + '%');
-
-                } else {
-                    $('.parametr.cap24hrChange .value').html('+' + changePercent24hr + '%');
-                    $('.hidden-stats .cap24hrChange .value').html('+' + changePercent24hr + '%');
-                    $('.head-stats .cap24hrChange .value').html('+' + changePercent24hr + '%');
-
-                    $('.hidden-stats .cap24hrChange .value').addClass('green');
-                    $('.head-stats .cap24hrChange .value').addClass('green');
-                    $('.parametr.cap24hrChange .value').addClass('green');
-                }
+                rawData = data;
+                populateCoinFields(data);
             }
         });
+
         $.ajax({
             url: urlDataGraph,
             method: 'GET',
             success: function (data) {
-                getData = data;
-                google.charts.load('current', {'packages': ['corechart']});
-                google.charts.setOnLoadCallback(drawChart);
-                // drawChart( data );
+                updateChart(data);
             }
         });
-        const pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${coinName}`)
+
+        var pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${coinName}`)
 
         pricesWs.onmessage = function (msg) {
+            let formatMoneyConfig = {
+                symbol: currency.symbol
+            }
             const price = JSON.parse(msg.data)
 
             let p = $('.head-stats .price .value');
 
-            $(p).html('$' + accounting.formatNumber(price[coinName], 3, ",", "."));
+            $(p).html(accounting.formatMoney(convertToCurrency(price[coinName]),formatMoneyConfig ));
             let className = currentPrice>price[coinName]?"#fe5a6e":"#16debb";
             currentPrice = price[coinName];
             $(p).css("color",className);
@@ -238,3 +277,7 @@ $(document).ready(function () {
 
 
 })
+
+    function convertToCurrency(priceInUsd){
+        return parseFloat(priceInUsd) * parseFloat(currency.rate);
+    }

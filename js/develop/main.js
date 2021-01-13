@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
   if ($(".share-sides").length && $(window).width() > 1024) {
     //$(".share-sides").sticky({topSpacing: 20});
@@ -9,10 +11,37 @@ $(document).ready(function () {
     //$("").stick_in_parent();
   }
 
-  $("select").select2({
+  $("select#currencySelector").select2({
     dir: "rtl",
+    placeholder:"USD",
+    ajax:{
+      url:"https://api.ratesapi.io/api/latest?base=USD",
+      processResults: function (data){
+        try{
 
+        return {
+          results:Object.entries(data.rates).map(([key,value])=>{
+          return {
+            id:key,
+            rate:value,
+            text:key,
+            symbol: currencies[key].symbol
+          }
+        })
+        }
+        }catch (e) {
+          throw new Error(e.message);
+        }
+      }
+    }
+
+
+  }).on('select2:select', function (e) {
+    var data = e.params.data;
+    window.currentCurrency = data;
+    document.dispatchEvent(new Event('currencyChange'));
   });
+
 
   /* tabs */
 
@@ -53,33 +82,37 @@ $(document).ready(function () {
   /* widjet copy */
 
   /* create single button */
+  var currencies = {};
 
-  if ($(".create-next-button").length) {
-    var curname = $(".create-next-button a").attr("data-curmin");
-    var currentHref = $(".create-next-button a").attr("href");
-
-    $.ajax({
-      url: "api.coincap.io/v2/",
-      method: "GET",
-      success: function (data) {
-        var next;
-        data.forEach((item, index) => {
-          if (item.short.toLowerCase() === curname.toLowerCase()) {
-            if (index + 1 >= data.length) {
-              next = 0;
-            } else {
-              next = index + 1;
-            }
-          }
-        });
-
-        $(".create-next-button a").attr(
-          "href",
-          currentHref + data[next].short.toLowerCase() + "/"
-        );
-      },
-    });
-  }
+  $.getJSON('/currencys.json',function (data){
+    currencies = data;
+  });
+  // if ($(".create-next-button").length) {
+  //   var curname = $(".create-next-button a").attr("data-curmin");
+  //   var currentHref = $(".create-next-button a").attr("href");
+  //
+  //   $.ajax({
+  //     url: "api.coincap.io/v2/",
+  //     method: "GET",
+  //     success: function (data) {
+  //       var next;
+  //       data.forEach((item, index) => {
+  //         if (item.short.toLowerCase() === curname.toLowerCase()) {
+  //           if (index + 1 >= data.length) {
+  //             next = 0;
+  //           } else {
+  //             next = index + 1;
+  //           }
+  //         }
+  //       });
+  //
+  //       $(".create-next-button a").attr(
+  //         "href",
+  //         currentHref + data[next].short.toLowerCase() + "/"
+  //       );
+  //     },
+  //   });
+  // }
 
   /* create single button */
 

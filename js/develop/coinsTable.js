@@ -12,6 +12,25 @@ window.onload = async function () {
     if(typeof window.fetchCoinIds!=="undefined" && window.fetchCoinIds===true){
         fetchCoinIds = true;
     }
+    // add cookie for default currency
+    let currency = {
+        id:"USD",
+        rate:"1",
+        text:"USD",
+        symbol:"$"
+    };
+    if(typeof window.currentCurrency!=='undefined' && window.currentCurrency){
+        currency = window.currentCurrency;
+    }
+
+    let formatMoneyConfig = {
+        symbol: currency.symbol
+    }
+    document.addEventListener('currencyChange',function (){
+        currency = window.currentCurrency;
+        formatMoneyConfig.symbol = currency.symbol;
+        populateTable(rawData,limit);
+    })
 
     // Api filters
     let offset = 0, limit = 100;
@@ -22,7 +41,7 @@ window.onload = async function () {
 
     //Posts array used for table population and query filter.
     let coinPosts = {};
-
+    let rawData =[];
     // Set Loading while we fetch data from api.
     table.innerHTML = tableHeader.outerHTML += `<div className="contein-empty">
         בטעינה
@@ -42,10 +61,11 @@ window.onload = async function () {
             column.classList.remove("up");
             column.classList.add("down", "active");
         }
-        populateTable(sortTableByKey(key, ["quotes","USD"],Object.values(dataObjected).slice(0,limit), descending))
+        populateTable(sortTableByKey(key, ["quotes","USD"],rawData, descending))
     }
 
     async function fetchHomePosts() {
+        if(Object.keys(coinPosts).length>0) return;
         const requestOptions = {
             method: 'GET',
             redirect: 'follow'
@@ -81,6 +101,7 @@ window.onload = async function () {
                 manipulatedData.forEach(coin => {
                     dataObjected[coin.id.split("-")[1]] = coin;
                 })
+                rawData =manipulatedData;
                 populateTable(manipulatedData,limit);
             }).then(()=>{
             initWebsocket()
@@ -89,6 +110,9 @@ window.onload = async function () {
     }
 
     function populateTable(data,limit=100) {
+        let formatMoneyConfig = {
+            symbol: currency.symbol
+        }
         let populatedHtml = table.querySelector(".table-row").outerHTML;
 
         function getTranslatedColumn(coin) {
@@ -121,6 +145,7 @@ window.onload = async function () {
         for (let i = 0; i <= limit&&i<Object.keys(dataObjected).length; i++) {
             const coin = data[i];
             const priceData = coin.quotes.USD;
+
             populatedHtml += `
                   
                     <div class="table-row ">
@@ -139,15 +164,15 @@ window.onload = async function () {
                                 </div>
                                 ${getTranslatedColumn(coin)}
                                 <div class="price" data-coin="${coin.id.split("-")[1]}">
-                                               <div>${accounting.toFixed(priceData.price, 3)} </div>
+                                               <div>${accounting.formatMoney(convertToCurrency(priceData.price), formatMoneyConfig)} </div>
 
                                 </div>
                                 <div class="mktcap">
-                                                <div>${accounting.toFixed(priceData.market_cap, 2)} </div>
+                                                <div>${accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig )} </div>
 
                                 </div>
                                 <div class="usdVolume">
-                                                <div>${accounting.toFixed(priceData.volume_24h, 2)} </div>
+                                                <div>${accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig)} </div>
 
                                 </div>
                                 <div class="cap24hrChange">
@@ -169,9 +194,9 @@ window.onload = async function () {
         table.querySelectorAll(".sort").forEach(function (el) {
             el.addEventListener("click", onSort)
         })
-        const loadMoreBtn =  table.querySelector(".load-more > div.butt");
+        const loadMoreBtn =  document.querySelector(".load-more.butt");
         if(loadMoreBtn){
-
+            console.log("found and should add event")
             loadMoreBtn.addEventListener("click", fetchMore);
         }
 
@@ -198,14 +223,14 @@ window.onload = async function () {
                 if (coinPrice) {
                     let oldValue;
                     if (dataObjected && dataObjected[key]) {
-                        oldValue = dataObjected[key].priceUsd;
+                        oldValue = dataObjected[key].price;
                         dataObjected[key] = {
                             ...dataObjected[key],
-                            priceUsd: value
+                            price: value
                         }
                     }
 
-                    coinPrice.innerHTML = `<div>${accounting.toFixed(value, 3)} </div>`;
+                    coinPrice.innerHTML = `<div>${accounting.formatMoney(convertToCurrency(value), formatMoneyConfig)} </div>`;
                     if (oldValue) {
                         const upColor = "rgba(24, 198, 131, 0.19) none repeat scroll 0% 0%";
                         const downColor = "rgba(244, 67, 54, 0.19) none repeat scroll 0% 0%";
@@ -250,9 +275,13 @@ window.onload = async function () {
 
 
     function fetchMore() {
+        console.log("Fetch more called")
         limit += 100;
-        populateTable(Object.values(dataObjected),limit)
-        // fetchAssets()
+        populateTable(rawData,limit)
+    }
+
+    function convertToCurrency(priceInUsd){
+        return parseFloat(priceInUsd) * parseFloat(currency.rate);
     }
 
 
