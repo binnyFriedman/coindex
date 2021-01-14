@@ -15,24 +15,7 @@
 
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <?php if ( is_singular( 'post' ) ) { ?>
-
-            <title>
-
-                מידע עדכני ומקיף על שער המטבע |  COINDEX
-                <?php the_field('post_name_translate'); ?> ( <?php the_field('post_name'); ?>, <?php the_field('post_short_name_connected_to_api'); ?> ) –
-            </title>
-
-        <?php
-
-        } else {
-
-            echo "<title>" . wp_get_document_title() . "</title>";
-
-        }
-
-    ?>
-
+    <title><?php wp_title(''); ?></title>
 
     <?php wp_head(); ?>
     <!-- build:css -->
