@@ -215,7 +215,7 @@
             <div class="mbox">
                 <div class="siders">
                     <div class="simple-part">
-                        <div class="logo-part">
+                        <div class="logo-part" style="margin-left: 1rem">
                             <a href="/">
                                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 911 159" style="enable-background:new 0 0 911 159; width: 100%;" xml:space="preserve">
                                 <style type="text/css">
@@ -272,12 +272,10 @@
                             </svg>
                             </a>
                         </div>
-                        <label for="currencySelector" >
-                             מטבע
-                        <select id="currencySelector" class="currency" style="width: 4rem">
+
+                        <select id="currencySelector" class="currency" style="margin-right: 1rem">
 
                         </select>
-                        </label>
 
                     </div>
 

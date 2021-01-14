@@ -11,9 +11,28 @@ $(document).ready(function () {
     //$("").stick_in_parent();
   }
 
+
+
+  function formatState (state) {
+
+  console.log(state);
+    if (!state.id) {
+      return state.text;
+    }
+    var $state = $(
+        `<span><span style="background: #f89f34;color: white;font-size: 13px;display: inline flex;
+padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
+    );
+    return $state;
+  };
+
+
   $("select#currencySelector").select2({
+    theme: "classic",
+    width: '180px',
+    templateResult: formatState,
     dir: "rtl",
-    placeholder:"USD",
+    placeholder:"מטבע $ ",
     ajax:{
       url:"https://api.ratesapi.io/api/latest?base=USD",
       processResults: function (data){
@@ -25,7 +44,8 @@ $(document).ready(function () {
             id:key,
             rate:value,
             text:key,
-            symbol: currencies[key].symbol
+            symbol: currencies[key].symbol_native,
+            name:currencies[key].name
           }
         })
         }
