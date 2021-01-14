@@ -101,9 +101,7 @@
                         <li><a href="/privacy-policy/">מדניות פרטיות</a></li>
                     </ul>
                 </div>
-                <div class="creators">
-                    <a href="https://anvi.co.il/" target="_blank"> Develop By ANVI - Digital Agency </a>
-                </div>
+
             </div>
         </div>
     </div>
