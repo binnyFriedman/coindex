@@ -1,13 +1,11 @@
 (function(window, document, undefined){
     document.addEventListener("DOMContentLoaded", function(){
-        console.log("im am running")
         init()
     });
     function init(){
 
 
         var plug = document.getElementById("coindex-vidjet");
-            console.log("found plug",plug)
         if ( plug != null ){
             plug.innerHTML += '<div class="last-row"><a href="https://www.coindex.co.il/" target="_blank">Powered by coindex</a></div>';
             var steak = plug.querySelectorAll("div");
@@ -15,7 +13,6 @@
             for ( var i=0; i < steak.length; i++ ){
 
                 if ( steak[i].getAttribute("id")!= null ) {
-                    console.log("we get here")
                     getDataFromApi(steak[i].getAttribute("id"), steak[i]);
                 }
             }

@@ -15,7 +15,6 @@ $(document).ready(function () {
 
   function formatState (state) {
 
-  console.log(state);
     if (!state.id) {
       return state.text;
     }
@@ -24,7 +23,7 @@ $(document).ready(function () {
 padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
     );
     return $state;
-  };
+  }
 
 
   $("select#currencySelector").select2({
@@ -104,7 +103,7 @@ padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
   /* create single button */
   var currencies = {};
 
-  $.getJSON('/currencys.json',function (data){
+  $.getJSON('/wp-content/themes/coindex/currencys.json',function (data){
     currencies = data;
   });
   // if ($(".create-next-button").length) {

@@ -239,7 +239,7 @@ $coin_id = $coin_symbol."-".$coin_name;
                                         <div class="copytext">
                                             <div class="textarea-place">
 
-                                                <textarea readonly="" name="text">&lt;div id="coindex-vidjet"&gt;&lt;div id="<?php echo $coin_id; ?>"&gt;&lt;/div&gt;&lt;/div&gt;&lt;script type="text/javascript" src="<?php echo site_url(); ?>/coindex-vidjet-plugin.js" &gt;&lt;/script&gt;</textarea>
+                                                <textarea readonly="" name="text">&lt;div id="coindex-vidjet"&gt;&lt;div id="<?php echo $coin_id; ?>"&gt;&lt;/div&gt;&lt;/div&gt;&lt;script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/coindex-vidjet-plugin.js" &gt;&lt;/script&gt;</textarea>
                                                 <div class="button-for-copy-row">
                                                     <button class="button-for-copy butt">
                                                         <span> העתק </span>
@@ -248,7 +248,7 @@ $coin_id = $coin_symbol."-".$coin_name;
                                             </div>
                                         </div>
                                         <div class="prsentation">
-                                            <script type="text/javascript" src="<?php echo site_url(); ?>/coindex-vidjet-plugin.js"></script>
+                                            <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/coindex-vidjet-plugin.js"></script>
                                             <div id="coindex-vidjet">
                                                 <div id="<?php echo $coin_id; ?>"></div>
                                             </div>
