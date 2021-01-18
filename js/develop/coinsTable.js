@@ -208,7 +208,6 @@ window.onload = async function () {
         })
         const loadMoreBtn =  document.querySelector(".load-more.butt");
         if(loadMoreBtn){
-            console.log("found and should add event")
             loadMoreBtn.addEventListener("click", fetchMore);
         }
 
