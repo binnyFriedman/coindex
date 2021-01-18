@@ -74,8 +74,8 @@ window.onload = async function () {
 
         posts.forEach(post => {
             let coinName =  post.acf.post_name.trim().replaceAll(" ","-");
-            let coinId = post.acf.post_short_name_connected_to_api.split("-")[0] +"-" + coinName.toLowerCase();
-            coinPosts[coinId] = post
+            let coinId = post.acf.post_short_name_connected_to_api.split("-")[0] +"-" + coinName;
+            coinPosts[coinId.toLowerCase()] = post
         });
     }
 
