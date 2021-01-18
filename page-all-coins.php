@@ -88,8 +88,6 @@ $blog_url= get_bloginfo( 'template_directory' );
                             wp_reset_postdata();
                             $postsW = new WP_Query( array(
                                 'post_type'=>'blog',
-                                'meta_key' => 'post_views_count',
-                                'orderby' => 'meta_value_num',
                                 'offset' => 2,
                                 'paged' => 1,
                                 'posts_per_page' => 6
@@ -137,8 +135,6 @@ $blog_url= get_bloginfo( 'template_directory' );
                             wp_reset_postdata();
                             $postsW = new WP_Query( array(
                                 'post_type'=>'blog',
-                                'meta_key' => 'post_views_count',
-                                'orderby' => 'meta_value_num',
                                 'offset' => 0,
                                 'paged' => 1,
                                 'posts_per_page' => 2
