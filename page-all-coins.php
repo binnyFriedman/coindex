@@ -37,8 +37,8 @@ $blog_url= get_bloginfo( 'template_directory' );
 
                         <div class="table-row title-row">
                             <div class="content">
-                                <div class="counter">
-                                    <div class="name no-sorter"> #</div>
+                                <div class="counter sort">
+                                    <div class="name" data-sort="rank">דירוג</div>
                                 </div>
                                 <div class="long">
                                     <div class="name no-sorter"> שם</div>
@@ -62,7 +62,7 @@ $blog_url= get_bloginfo( 'template_directory' );
                         </div>
                         </div>
                         <div class="load-more">
-                            <div class="load-more butt"><span>הצג 100 נוספים</span></div>
+                            <div class="load-more butt"><span>הצג 30 נוספים</span></div>
                         </div>
                     </div>
                 </div>

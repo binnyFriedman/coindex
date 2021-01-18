@@ -29,11 +29,16 @@ window.onload = async function () {
     document.addEventListener('currencyChange',function (){
         currency = window.currentCurrency;
         formatMoneyConfig.symbol = currency.symbol;
-        populateTable(rawData,limit);
+        populateTable(rawData,localCoinsLimit);
     })
 
     // Api filters
-    let offset = 0, limit = 100;
+        let localCoinsLimit = 30,step= 30;
+    if("undefined"!==typeof coinLimit){
+         localCoinsLimit = coinLimit;
+         step=coinStep;
+
+    }
 
     // Table parts that need to be re attached after table population.
     const tableHeader = table.querySelector(".table-row");
@@ -52,6 +57,8 @@ window.onload = async function () {
         const key = el.target.dataset.sort;
         const column = el.target;
         let descending = false;
+        let depth = key==="rank"?[]:["quotes","USD"]
+        console.log(key,depth);
         table.querySelectorAll(".active").forEach(el => el.classList.remove("active"))
         if (column.classList.contains("down")) {
             column.classList.remove("down");
@@ -61,7 +68,7 @@ window.onload = async function () {
             column.classList.remove("up");
             column.classList.add("down", "active");
         }
-        populateTable(sortTableByKey(key, ["quotes","USD"],rawData, descending))
+        populateTable(sortTableByKey(key, depth,rawData, descending))
     }
 
     async function fetchHomePosts() {
@@ -102,14 +109,18 @@ window.onload = async function () {
                     dataObjected[coin.id.split("-")[1]] = coin;
                 })
                 rawData =manipulatedData;
-                populateTable(manipulatedData,limit);
+                if("undefined"!==typeof defaultSort){
+                    populateTable(sortTableByKey(defaultSort,[],manipulatedData,true),localCoinsLimit);
+                }
+                populateTable(manipulatedData,localCoinsLimit);
             }).then(()=>{
             initWebsocket()
         })
             .catch(error => console.log('error', error));
     }
 
-    function populateTable(data,limit=100) {
+    function populateTable(data,limit) {
+        if(!limit)limit = localCoinsLimit;
         let formatMoneyConfig = {
             symbol: currency.symbol
         }
@@ -126,23 +137,24 @@ window.onload = async function () {
         }
 
         function getCoinImage(coin) {
+            let image = 'https://static.coincap.io/assets/icons/'+ coin.symbol.toLowerCase() +'@2x.png';
             if (coin.id && fetchCoinIds===true && coinPosts[coin.id] ) {
-                const image = coinPosts[coin.id].acf.post_image;
-                return `<div style="display: flex"><img src="${image}" height="30"  /><span style="margin: auto 0.3rem">${coin.name}</span></div>`
+                image = coinPosts[coin.id].acf.post_image;
             }
-            return `<div>${coin.name}</div>`;
+            return `<div style="display: flex"><img src="${image}" height="30"  /><span style="margin: auto 0.3rem">${coin.name}</span></div>`
         }
 
         function getWrapperLink(placement, coin) {
+            let link = `${window.location.origin}/${coin.symbol.toLowerCase()} `
             if (coin && fetchCoinIds===true && coinPosts[coin.id]) {
-                return placement === "up" ?
-                    `<a href="${coinPosts[coin.id].link}" >`
-                    : "</a>"
+                link = coinPosts[coin.id].link;
             }
-            return  ""
+                return placement === "up" ?
+                    `<a href="${link}" >`
+                    : "</a>"
         }
 
-        for (let i = 0; i <= limit&&i<Object.keys(dataObjected).length; i++) {
+        for (let i = 0; i < limit&&i<Object.keys(dataObjected).length; i++) {
             const coin = data[i];
             const priceData = coin.quotes.USD;
 
@@ -151,7 +163,7 @@ window.onload = async function () {
                     <div class="table-row ">
                             <div class="content">
                                 <div class="counter">
-                                               <div>${i + 1}</div>
+                                               <div>${coin.rank}</div>
                                                
                                 </div>
                                 <div class="long">
@@ -276,8 +288,8 @@ window.onload = async function () {
 
     function fetchMore() {
         console.log("Fetch more called")
-        limit += 100;
-        populateTable(rawData,limit)
+        localCoinsLimit += step;
+        populateTable(rawData,localCoinsLimit)
     }
 
     function convertToCurrency(priceInUsd){
