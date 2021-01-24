@@ -123,27 +123,22 @@
 
                             while ( $postsW->have_posts() ) {
                                 $postsW->the_post();
-
+                                $thumb = get_the_post_thumbnail_url();
+                                if(!$thumb){
+                                    $thumb = '/wp-content/themes/coindex/images/logo.png';
+                                }
                                 ?>
+
 
                                 <a href="<?php echo get_permalink();?>" class="single">
 
-                                    <?php
-                                    global $post;
-                                    $thumbnail_attributes = wp_get_attachment_image_src( get_the_post_thumbnail(), 'full' ); // возвращает массив параметров миниатюры
-
-                                    if ( $thumbnail_attributes == '' ){
-                                         $thumbnail_attributes[0] = '/wp-content/themes/coindex/images/logo.png';
-                                    }
-
-                                    ?>
-                                    <div class="con" <?php if(  $thumbnail_attributes == '' ){ echo 'style="background-color: #ccc;"';}; ?> >
-                                        <img src="<?php echo $thumbnail_attributes[0]; ?>" alt="">
+                                    <div class="con" >
+                                        <img src="<?php echo $thumb; ?>" alt="">
                                     </div>
                                     <div class="texter">
                                         <div class="name"> <?php the_title()?> </div>
                                         
-                                    <p> <?php the_field('short_text_news');?></p>
+<!--                                    <p> --><?php //the_field('short_text_news');?><!--</p>-->
                                     </div>
                                 </a>
 
