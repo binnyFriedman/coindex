@@ -9,9 +9,14 @@ $blog_url= get_bloginfo( 'template_directory' );
 <div class="main">
     <!-- add partials here -->
    <script>
-       const coinLimit = 10;
-       const coinStep = 10;
-       const defaultSort = "rank";
+       const coinTableConfig ={
+            coinLimit :10,
+            coinStep: 10,
+            unfoldsThreshold:2,
+           increaseStep:100,
+           defaultSort:"rank"
+       }
+
    </script>
     <?php if( get_field('show_bunner') ): ?>
         <div class="bunner-row">

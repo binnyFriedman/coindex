@@ -7,8 +7,23 @@ window.onload = async function () {
     // The data as key base value for quick price updates.
     let dataObjected = {};
 
-    //set fetchCoins default value
     let fetchCoinIds = false;
+    let localCoinsLimit = 30,step= 30,increaseStep=step;
+    let unfoldsThreshold = 0;
+    let numberUnfolds = 0;
+    let localIncreaseLimit =false;
+    let defaultSort = false;
+    //set fetchCoins default value
+    if("undefined"!== typeof coinTableConfig){
+        fetchCoinIds = coinTableConfig.fetchCoinIds??false;
+        localCoinsLimit = coinTableConfig.coinLimit;
+        step=coinTableConfig.coinStep;
+        defaultSort=coinTableConfig.defaultSort;
+        unfoldsThreshold = coinTableConfig.unfoldsThreshold;
+        increaseStep = coinTableConfig.increaseStep;
+        localIncreaseLimit = !!coinTableConfig.increaseStep;
+        // Api filters
+    }
     if(typeof window.fetchCoinIds!=="undefined" && window.fetchCoinIds===true){
         fetchCoinIds = true;
     }
@@ -32,13 +47,7 @@ window.onload = async function () {
         populateTable(rawData,localCoinsLimit);
     })
 
-    // Api filters
-        let localCoinsLimit = 30,step= 30;
-    if("undefined"!==typeof coinLimit){
-         localCoinsLimit = coinLimit;
-         step=coinStep;
 
-    }
 
     // Table parts that need to be re attached after table population.
     const tableHeader = table.querySelector(".table-row");
@@ -207,6 +216,9 @@ window.onload = async function () {
         })
         const loadMoreBtn =  document.querySelector(".load-more.butt");
         if(loadMoreBtn){
+            if(localIncreaseLimit&&numberUnfolds>=unfoldsThreshold){
+                loadMoreBtn.innerHTML = `הצג ${increaseStep} נוספים `;
+            }
             loadMoreBtn.addEventListener("click", fetchMore);
         }
 
@@ -285,6 +297,10 @@ window.onload = async function () {
 
 
     function fetchMore() {
+        numberUnfolds++;
+        if(localIncreaseLimit&&numberUnfolds>unfoldsThreshold){
+                step = increaseStep
+        }
         localCoinsLimit += step;
         populateTable(rawData,localCoinsLimit)
     }
