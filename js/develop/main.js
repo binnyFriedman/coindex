@@ -13,53 +13,8 @@ $(document).ready(function () {
 
 
 
-  function formatState (state) {
-
-    if (!state.id) {
-      return state.text;
-    }
-    var $state = $(
-        `<span><span style="background: #f89f34;color: white;font-size: 13px;display: inline flex;
-padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
-    );
-    return $state;
-  }
 
 
-  $("select#currencySelector").select2({
-    theme: "classic",
-    width: '180px',
-    templateResult: formatState,
-    dir: "rtl",
-    placeholder:"מטבע $ ",
-    ajax:{
-      url:"https://api.ratesapi.io/api/latest?base=USD",
-      processResults: function (data){
-        try{
-
-        return {
-          results:Object.entries(data.rates).map(([key,value])=>{
-          return {
-            id:key,
-            rate:value,
-            text:key,
-            symbol: currencies[key].symbol_native,
-            name:currencies[key].name
-          }
-        })
-        }
-        }catch (e) {
-          throw new Error(e.message);
-        }
-      }
-    }
-
-
-  }).on('select2:select', function (e) {
-    var data = e.params.data;
-    window.currentCurrency = data;
-    document.dispatchEvent(new Event('currencyChange'));
-  });
 
 
   /* tabs */
@@ -101,11 +56,7 @@ padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
   /* widjet copy */
 
   /* create single button */
-  var currencies = {};
 
-  $.getJSON('/wp-content/themes/coindex/currencys.json',function (data){
-    currencies = data;
-  });
   // if ($(".create-next-button").length) {
   //   var curname = $(".create-next-button a").attr("data-curmin");
   //   var currentHref = $(".create-next-button a").attr("href");

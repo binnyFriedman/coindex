@@ -161,8 +161,11 @@ $(document).ready(function () {
 
     document.addEventListener('currencyChange',function (){
         currency = window.currentCurrency;
-        populateCoinFields(rawData);
-        updateChart(getData);
+        if(Object.keys(rawData).length>0){
+
+            populateCoinFields(rawData);
+            updateChart(getData);
+        }
     })
 
     function populateCoinFields(data) {

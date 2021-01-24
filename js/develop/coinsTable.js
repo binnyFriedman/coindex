@@ -58,7 +58,6 @@ window.onload = async function () {
         const column = el.target;
         let descending = false;
         let depth = key==="rank"?[]:["quotes","USD"]
-        console.log(key,depth);
         table.querySelectorAll(".active").forEach(el => el.classList.remove("active"))
         if (column.classList.contains("down")) {
             column.classList.remove("down");
@@ -286,7 +285,6 @@ window.onload = async function () {
 
 
     function fetchMore() {
-        console.log("Fetch more called")
         localCoinsLimit += step;
         populateTable(rawData,localCoinsLimit)
     }
