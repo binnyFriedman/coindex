@@ -148,6 +148,7 @@
 <script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/cab.js?ver=<?php echo time(); ?>" ></script>
 <script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/header-stats.js?ver=<?php echo time(); ?>" ></script>
 <script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/coinsTable.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/search.js?ver=<?php echo time(); ?>" ></script>
 
 
 <script type="text/javascript" src="<?php echo $blog_url; ?>/addon/statistic-rank.js" ></script>
