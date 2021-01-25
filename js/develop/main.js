@@ -57,32 +57,33 @@ $(document).ready(function () {
 
   /* create single button */
 
-  // if ($(".create-next-button").length) {
-  //   var curname = $(".create-next-button a").attr("data-curmin");
-  //   var currentHref = $(".create-next-button a").attr("href");
-  //
-  //   $.ajax({
-  //     url: "api.coincap.io/v2/",
-  //     method: "GET",
-  //     success: function (data) {
-  //       var next;
-  //       data.forEach((item, index) => {
-  //         if (item.short.toLowerCase() === curname.toLowerCase()) {
-  //           if (index + 1 >= data.length) {
-  //             next = 0;
-  //           } else {
-  //             next = index + 1;
-  //           }
-  //         }
-  //       });
-  //
-  //       $(".create-next-button a").attr(
-  //         "href",
-  //         currentHref + data[next].short.toLowerCase() + "/"
-  //       );
-  //     },
-  //   });
-  // }
+  if ($(".create-next-button").length) {
+    const nextButton = $(".create-next-button a");
+    const curname = $(nextButton).attr("data-curmin");
+    const currentHref = $(nextButton).attr("href");
+
+    $.ajax({
+      url: "https://api.coinpaprika.com/v1/coins",
+      method: "GET",
+      success: function (data) {
+        let next;
+        data.sort((a,b)=>{
+          return a.rank - b.rank;
+        })
+        next = data.findIndex((coin=>{
+          return coin.id === curname;
+        }))+1;
+        if(next===data.length){
+          next = 0;
+        }
+
+        $(".create-next-button a").attr(
+          "href",
+          currentHref + data[next].symbol.toLowerCase()
+        );
+      },
+    });
+  }
 
   /* create single button */
 

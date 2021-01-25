@@ -158,7 +158,8 @@ $coin_id = $coin_symbol."-".$coin_name;
                         <div class="buttons">
                             <div class="contein">
                                 <script src="https://changelly.com/static/payment-button-widget/widget-modal.js"></script>
-                                <iframe src="https://changelly.com/static/payment-button-widget/index.html?paymentButtonTheme=desert&buttonTextId=002&widgetLink=https%3A%2F%2Fwidget.changelly.com%3Ffrom%3Dbtc%252Cusd%26to%3D*%26amount%3D1000%26address%3D%26fromDefault%3Dusd%26toDefault%3D<?php echo $coin_symbol;?>%26theme%3Ddefault%26merchant_id%3Di3ff3bxfjcosysmt%26payment_id%3D%26v%3D3&isPopUp=true" width="180" height="48" frameborder="0"></iframe>
+
+                                <iframe src="https://changelly.com/static/payment-button-widget/index.html?paymentButtonTheme=desert&buttonTextId=002&widgetLink=https%3A%2F%2Fwidget.changelly.com%3Ffrom%3Dbtc%252Cusd%252Ceur%252Cils%252Ceth%26to%3D*%26amount%3D1000%26address%3D%26fromDefault%3Dils%26toDefault%3D<?php echo $coin_symbol;?>%26theme%3Ddefault%26merchant_id%3Di3ff3bxfjcosysmt%26payment_id%3D%26v%3D3&isPopUp=true" width="180" height="48" frameborder="0"></iframe>
                                 <link rel="stylesheet" href="https://changelly.com/static/payment-button-widget/widget-modal.css"/>
                                 <div id="changellyModal"></div>
                             </div>
@@ -289,10 +290,11 @@ $coin_id = $coin_symbol."-".$coin_name;
                             </div>
 
                             <div class="row-bye" style="direction: ltr">
-                                <iframe src="https://changelly.com/static/payment-button-widget/index.html?paymentButtonTheme=desert&buttonTextId=002&widgetLink=https%3A%2F%2Fwidget.changelly.com%3Ffrom%3Dbtc%252Cusd%26to%3D*%26amount%3D1000%26address%3D%26fromDefault%3Dusd%26toDefault%3D<?php echo $coin_symbol;?>%26theme%3Ddefault%26merchant_id%3Di3ff3bxfjcosysmt%26payment_id%3D%26v%3D3&isPopUp=true" width="180" height="48" frameborder="0"></iframe>
-
+                                <iframe src="https://changelly.com/static/payment-button-widget/index.html?paymentButtonTheme=desert&buttonTextId=002&widgetLink=https%3A%2F%2Fwidget.changelly.com%3Ffrom%3Dbtc%252Cusd%252Ceur%252Cils%252Ceth%26to%3D*%26amount%3D1000%26address%3D%26fromDefault%3Dils%26toDefault%3D<?php echo $coin_symbol;?>%26theme%3Ddefault%26merchant_id%3Di3ff3bxfjcosysmt%26payment_id%3D%26v%3D3&isPopUp=true" width="180" height="48" frameborder="0"></iframe>
                             </div>
-
+                            <div class="row-after-all create-next-button">
+                                <a data-curmin="<?php echo $coin_id; ?>" href="<?php echo site_url(); ?>/" rel="next">למעבר למטבע הבא</a>
+                            </div>
 
                             <div class="texter">
                                 <p>חשוב לדעת: כל ההסברים על המטבעות השונים מבוססים על פרסומים של יוצריהם. אין לראות במידע כהמלצה, או כייעוץ.השימוש באתר על אחיות המשתמש/ת בלבד.</p>
