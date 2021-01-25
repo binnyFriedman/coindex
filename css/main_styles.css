@@ -15,6 +15,9 @@ body
   max-width: 100%;
   overflow-x: hidden;
 }
+.select2 , .select2-container{
+  z-index: -1;
+}
 
 .main {
   background-color: #F7F7F7;
