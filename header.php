@@ -273,9 +273,9 @@
                             </a>
                         </div>
 
-                        <select id="currencySelector" class="currency" style="margin-right: 1rem">
 
-                        </select>
+
+
 
                     </div>
 
@@ -356,7 +356,22 @@
 
                 </div>
             </div>
+            <style>
+                .second-header-row{
+                    justify-content: space-between;
+                    display: flex;
+                    margin-top: 0.5rem;
+                }
+            </style>
+            <div class="mbox second-header-row" style="justify-content: space-between">
+                <select id="currencySelector" class="currency" style="margin:0 1rem">
+                    <option></option>
+                </select>
 
+                <select id="searchCoins" class="currency" style="margin:0 1rem;">
+                    <option></option>
+                </select>
+            </div>
             <div class="hidden-menu">
                 <div class="convert">
                     <div class="top-part">
