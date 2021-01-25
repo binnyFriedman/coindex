@@ -30,7 +30,7 @@ $(document).ready(function () {
         minimumInputLength: 3,
         language:{
             inputTooShort:function (){
-                return "הכנס לפחות 3 תווים לחיפוש"
+                return " הכנס את שם המטבע או סימול (לפחות 3 תווים באנגלית) "
             },
             searching:function (){
                 return "מחפש..."
