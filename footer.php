@@ -88,6 +88,13 @@
                         <div class="header"> <?php echo $men2->name;?> </div>
                         <?php wp_nav_menu(array('menu'=> 4, 'menu_class' => '', 'container' => false )); ?>
                     </div>
+                    <div class="menu">
+                        <?php
+                            $men3 = wp_get_nav_menu_object( get_nav_menu_locations()["footer_posts"] ) ;
+                        ?>
+                        <div class="header"> <?php echo $men3->name;?> </div>
+                        <?php wp_nav_menu(array('theme_location'=> 'footer_posts', 'menu_class' => '', 'container' => false )); ?>
+                    </div>
                 </div>
             </div>
         </div>
