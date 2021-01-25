@@ -45,8 +45,7 @@ $(document).ready(function(){
             return state.text;
         }
         var $state = $(
-            `<span><span style="background: #f89f34;color: white;font-size: 13px;display: inline flex;
-padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
+            `<span>${state.symbol} </span>`
         );
         return $state;
     }
@@ -124,10 +123,11 @@ padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
 
                         $("select#currencySelector").select2({
                             theme: "classic",
-                            width: '180px',
+                            width: '4rem',
                             templateResult: formatState,
                             dir: "rtl",
-                            placeholder:"מטבע $ ",
+                            allowClear: true,
+                            placeholder:"$",
                             data:window.availableCurrencies.reverse()
                         }).on('select2:select', function (e) {
                             var data = e.params.data;
