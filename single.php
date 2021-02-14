@@ -16,7 +16,7 @@ $coin_id = $coin_symbol."-".$coin_name;
             const baseApiUrl = '<?php echo $baseApi;?>';
             const coin = '<?php echo $coin_id; ?>'
             const urlDataText = baseApiUrl+'tickers/'+coin;
-            const urlDataGraph = `${urlDataText}/historical?start=${getHistorical()}&interval=30m`;
+            const urlDataGraph = `${urlDataText}/historical?start=${getHistorical()}&interval=2h`;
 
 
             function getHistorical(){

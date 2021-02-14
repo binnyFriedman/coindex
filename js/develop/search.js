@@ -66,7 +66,6 @@ $(document).ready(function () {
         }
     }).on('select2:select',function (e){
         let data = e.params.data;
-        console.log(data);
         location.assign(window.location.origin+"/"+data.symbol.toLowerCase())
     });
 });
