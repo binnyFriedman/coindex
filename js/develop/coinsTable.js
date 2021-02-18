@@ -38,8 +38,11 @@ window.onload = async function () {
         currency = window.currentCurrency;
     }
 
-    let formatMoneyConfig = {
-        symbol: currency.symbol
+    let formatMoneyConfig =(price)=> {
+        return {
+            symbol: currency.symbol,
+            precision: price>1?2:7
+        }
     }
     document.addEventListener('currencyChange',function (){
         currency = window.currentCurrency;
@@ -129,8 +132,12 @@ window.onload = async function () {
 
     function populateTable(data,limit) {
         if(!limit)limit = localCoinsLimit;
-        let formatMoneyConfig = {
-            symbol: currency.symbol
+        let formatMoneyConfig =(price)=>{
+
+            return  {
+                symbol: currency.symbol,
+                precision:price>1?2:6
+            }
         }
         let populatedHtml = table.querySelector(".table-row").outerHTML;
 
@@ -184,15 +191,15 @@ window.onload = async function () {
                                 </div>
                                 ${getTranslatedColumn(coin)}
                                 <div class="price" data-coin="${coin.id.split("-")[1]}">
-                                               <div>${accounting.formatMoney(convertToCurrency(priceData.price), formatMoneyConfig)} </div>
+                                               <div>${accounting.formatMoney(convertToCurrency(priceData.price), formatMoneyConfig(convertToCurrency(priceData.price)))} </div>
 
                                 </div>
                                 <div class="mktcap">
-                                                <div>${accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig )} </div>
+                                                <div>${accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig(convertToCurrency(priceData.market_cap)) )} </div>
 
                                 </div>
                                 <div class="usdVolume">
-                                                <div>${accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig)} </div>
+                                                <div>${accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig(convertToCurrency(priceData.volume_24h)))} </div>
 
                                 </div>
                                 <div class="cap24hrChange">
@@ -252,7 +259,7 @@ window.onload = async function () {
                         }
                     }
 
-                    coinPrice.innerHTML = `<div>${accounting.formatMoney(convertToCurrency(value), formatMoneyConfig)} </div>`;
+                    coinPrice.innerHTML = `<div>${accounting.formatMoney(convertToCurrency(value), formatMoneyConfig(convertToCurrency(value)))} </div>`;
                     if (oldValue) {
                         const upColor = "rgba(24, 198, 131, 0.19) none repeat scroll 0% 0%";
                         const downColor = "rgba(244, 67, 54, 0.19) none repeat scroll 0% 0%";
@@ -308,6 +315,12 @@ window.onload = async function () {
     function convertToCurrency(priceInUsd){
         return parseFloat(priceInUsd) * parseFloat(currency.rate);
     }
-
+    // function formatMoney(money,config){
+    //     if(money<1){
+    //
+    //     }else{
+    //         return accounting.formatMoney(price,config);
+    //     }
+    // }
 
 }
