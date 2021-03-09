@@ -16,6 +16,7 @@ body
   overflow-x: hidden;
 }
 
+
 .main {
   background-color: #F7F7F7;
   padding: 10px 0 20px; }
@@ -366,6 +367,7 @@ header {
           .head-row .user-controll .line a:hover svg path {
             fill: #FFB438; }
     .head-row .user-controll:hover .hiddener {
+        z-index: 3;
       opacity: 1;
       pointer-events: auto; }
 
@@ -427,7 +429,7 @@ footer {
       -ms-flex-pack: start;
       justify-content: flex-start; }
       footer .topper .menus .menu {
-        margin-left: 100px; }
+        margin-left: 60px; }
         footer .topper .menus .menu:last-child {
           margin-left: 0; }
       footer .topper .menus .header {
@@ -1462,6 +1464,7 @@ footer {
   z-index: 1; }
   .tabs-wrap .navigate-tabs ul {
     list-style: none;
+
     padding: 0;
     margin: 0;
     display: -webkit-box;
@@ -1469,6 +1472,7 @@ footer {
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
+    justify-content: space-between;
     -webkit-box-align: stretch;
     -webkit-align-items: stretch;
     -moz-box-align: stretch;
@@ -2208,4 +2212,15 @@ footer {
   transition-duration: 0.35s;
   transition-timing-function: ease;
   transition-delay: 0s;
+}
+.no-decoration{
+  text-decoration: none;
+}
+
+.no-color{
+  color: inherit;
+}
+.table-wrap .convert-table .long {
+  color: blue;
+  text-decoration: underline;
 }

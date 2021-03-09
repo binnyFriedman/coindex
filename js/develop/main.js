@@ -13,54 +13,8 @@ $(document).ready(function () {
 
 
 
-  function formatState (state) {
-
-  console.log(state);
-    if (!state.id) {
-      return state.text;
-    }
-    var $state = $(
-        `<span><span style="background: #f89f34;color: white;font-size: 13px;display: inline flex;
-padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
-    );
-    return $state;
-  };
 
 
-  $("select#currencySelector").select2({
-    theme: "classic",
-    width: '180px',
-    templateResult: formatState,
-    dir: "rtl",
-    placeholder:"מטבע $ ",
-    ajax:{
-      url:"https://api.ratesapi.io/api/latest?base=USD",
-      processResults: function (data){
-        try{
-
-        return {
-          results:Object.entries(data.rates).map(([key,value])=>{
-          return {
-            id:key,
-            rate:value,
-            text:key,
-            symbol: currencies[key].symbol_native,
-            name:currencies[key].name
-          }
-        })
-        }
-        }catch (e) {
-          throw new Error(e.message);
-        }
-      }
-    }
-
-
-  }).on('select2:select', function (e) {
-    var data = e.params.data;
-    window.currentCurrency = data;
-    document.dispatchEvent(new Event('currencyChange'));
-  });
 
 
   /* tabs */
@@ -102,37 +56,34 @@ padding: 7px;" >${state.symbol}</span>   ${state.name}</span>`
   /* widjet copy */
 
   /* create single button */
-  var currencies = {};
 
-  $.getJSON('/currencys.json',function (data){
-    currencies = data;
-  });
-  // if ($(".create-next-button").length) {
-  //   var curname = $(".create-next-button a").attr("data-curmin");
-  //   var currentHref = $(".create-next-button a").attr("href");
-  //
-  //   $.ajax({
-  //     url: "api.coincap.io/v2/",
-  //     method: "GET",
-  //     success: function (data) {
-  //       var next;
-  //       data.forEach((item, index) => {
-  //         if (item.short.toLowerCase() === curname.toLowerCase()) {
-  //           if (index + 1 >= data.length) {
-  //             next = 0;
-  //           } else {
-  //             next = index + 1;
-  //           }
-  //         }
-  //       });
-  //
-  //       $(".create-next-button a").attr(
-  //         "href",
-  //         currentHref + data[next].short.toLowerCase() + "/"
-  //       );
-  //     },
-  //   });
-  // }
+  if ($(".create-next-button").length) {
+    const nextButton = $(".create-next-button a");
+    const curname = $(nextButton).attr("data-curmin");
+    const currentHref = $(nextButton).attr("href");
+
+    $.ajax({
+      url: "https://api.coinpaprika.com/v1/coins",
+      method: "GET",
+      success: function (data) {
+        let next;
+        data.sort((a,b)=>{
+          return a.rank - b.rank;
+        })
+        next = data.findIndex((coin=>{
+          return coin.id === curname;
+        }))+1;
+        if(next===data.length){
+          next = 0;
+        }
+
+        $(".create-next-button a").attr(
+          "href",
+          currentHref + data[next].symbol.toLowerCase()
+        );
+      },
+    });
+  }
 
   /* create single button */
 

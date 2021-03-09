@@ -24,7 +24,9 @@
     add_action( 'after_setup_theme', 'coindex_menu' );
 
     function coindex_menu() {
-        register_nav_menu( 'primary', __( 'Primary Menu', 'theme-text-domain' )  );
+        register_nav_menus( ['primary'=> __( 'Primary Menu', 'theme-text-domain' ),
+            'footer_posts'=> __( 'Posts location', 'theme-text-domain')
+            ]  );
     }
 
     /* footer contacts */
