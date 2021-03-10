@@ -165,7 +165,7 @@ window.onload = async function () {
                 link = coinPosts[coin.id].link;
             }
                 return placement === "up" ?
-                    `<a href="${link}" >`
+                    `<a class="no-decoration no-color" href="${link}" >`
                     : "</a>"
         }
 
@@ -176,15 +176,14 @@ window.onload = async function () {
             populatedHtml += `
                   
                     <div class="table-row ">
+                                  ${getWrapperLink("up", coin)}
                             <div class="content">
                                 <div class="counter">
                                                <div>${coin.rank}</div>
                                                
                                 </div>
                                 <div class="long">
-                                  ${getWrapperLink("up", coin)}
                                                ${getCoinImage(coin)}
-                                ${getWrapperLink("down", coin)}
                                 </div>
                                 <div class="short">
                                                <div>${coin.symbol}</div>
@@ -206,6 +205,7 @@ window.onload = async function () {
                                     <div style="direction: ltr;text-align: right">${accounting.toFixed(priceData.percent_change_24h, 2)}% </div>
                                 </div>
                             </div>
+                                ${getWrapperLink("down", coin)}
                         </div>
            
 
