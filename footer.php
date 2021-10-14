@@ -88,6 +88,13 @@
                         <div class="header"> <?php echo $men2->name;?> </div>
                         <?php wp_nav_menu(array('menu'=> 4, 'menu_class' => '', 'container' => false )); ?>
                     </div>
+                    <div class="menu">
+                        <?php
+                            $men3 = wp_get_nav_menu_object( get_nav_menu_locations()["footer_posts"] ) ;
+                        ?>
+                        <div class="header"> <?php echo $men3->name;?> </div>
+                        <?php wp_nav_menu(array('theme_location'=> 'footer_posts', 'menu_class' => '', 'container' => false )); ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,9 +108,7 @@
                         <li><a href="/privacy-policy/">מדניות פרטיות</a></li>
                     </ul>
                 </div>
-                <div class="creators">
-                    <a href="https://anvi.co.il/" target="_blank"> Develop By ANVI - Digital Agency </a>
-                </div>
+
             </div>
         </div>
     </div>
@@ -129,27 +134,28 @@
 
 <!-- SCRIPTS -->
 <script src="<?php echo $blog_url ?>/js/plagins/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/validate_script.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/validate_script.js?ver=<?php echo time(); ?>" ></script>
 
 <!-- build:js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.js"></script>
 
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/select2.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/jquery.validate.min.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/maskInput.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/slick.js" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/select2.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/jquery.validate.min.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/maskInput.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/slick.js?ver=<?php echo time(); ?>" ></script>
 
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/sticky.js" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/plagins/sticky.js?ver=<?php echo time(); ?>" ></script>
 
 
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/basic_scripts.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/main.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/custom.js" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/basic_scripts.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/main.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/custom.js?ver=<?php echo time(); ?>" ></script>
 
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/graph.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/cab.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/header-stats.js" ></script>
-<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/coinsTable.js" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/graph.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/cab.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/header-stats.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/coinsTable.js?ver=<?php echo time(); ?>" ></script>
+<script type="text/javascript" src="<?php echo $blog_url ?>/js/develop/search.js?ver=<?php echo time(); ?>" ></script>
 
 
 <script type="text/javascript" src="<?php echo $blog_url; ?>/addon/statistic-rank.js" ></script>
