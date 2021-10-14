@@ -191,8 +191,13 @@
     line-height: 1.5; }
   footer .topper .infoblock .logo {
     margin-bottom: 10px; }
+  footer .topper .menus{
+    flex-wrap: wrap;
+  }
   footer .topper .menus .menu {
-    margin-left: 60px; }
+    margin-left: 60px;
+    margin-bottom: 2rem;
+  }
   footer .topper .menus .header {
     padding-bottom: 5px; }
   footer .topper .siders {

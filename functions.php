@@ -24,7 +24,9 @@
     add_action( 'after_setup_theme', 'coindex_menu' );
 
     function coindex_menu() {
-        register_nav_menu( 'primary', __( 'Primary Menu', 'theme-text-domain' )  );
+        register_nav_menus( ['primary'=> __( 'Primary Menu', 'theme-text-domain' ),
+            'footer_posts'=> __( 'Posts location', 'theme-text-domain')
+            ]  );
     }
 
     /* footer contacts */
@@ -235,3 +237,33 @@ function cpt_news_calback() {
 
 }
 
+add_action('init','cpt_currencies_callback');
+
+function cpt_currencies_callback() {
+    $labels = array(
+        "name" => "Currency",
+        "singular_name" => "Currency",
+        "menu_name" => "Currency",
+        "all_items" => "All currencies",
+    );
+
+    $args = array(
+        "labels" => $labels,
+        "description" => "Regular traditional currencies like EUR and USD",
+        "public" => true,
+        "show_ui" => true,
+        "has_archive" => false,
+        "show_in_menu" => true,
+        "exclude_from_search" => true,
+        "capability_type" => "post",
+        "map_meta_cap" => true,
+        "hierarchical" => true,
+        "rewrite" => true,
+        "query_var" => true,
+        "menu_position" => 10,
+        "menu_icon" => "dashicons-money-alt",
+        "supports" => array( "title", 'thumbnail', "editor" ),
+    );
+
+    register_post_type( "currency", $args );
+}

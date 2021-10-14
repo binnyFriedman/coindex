@@ -7,8 +7,23 @@ window.onload = async function () {
     // The data as key base value for quick price updates.
     let dataObjected = {};
 
-    //set fetchCoins default value
     let fetchCoinIds = false;
+    let localCoinsLimit = 30,step= 30,increaseStep=step;
+    let unfoldsThreshold = 0;
+    let numberUnfolds = 0;
+    let localIncreaseLimit =false;
+    let defaultSort = false;
+    //set fetchCoins default value
+    if("undefined"!== typeof coinTableConfig){
+        fetchCoinIds = coinTableConfig.fetchCoinIds??false;
+        localCoinsLimit = coinTableConfig.coinLimit;
+        step=coinTableConfig.coinStep;
+        defaultSort=coinTableConfig.defaultSort;
+        unfoldsThreshold = coinTableConfig.unfoldsThreshold;
+        increaseStep = coinTableConfig.increaseStep;
+        localIncreaseLimit = !!coinTableConfig.increaseStep;
+        // Api filters
+    }
     if(typeof window.fetchCoinIds!=="undefined" && window.fetchCoinIds===true){
         fetchCoinIds = true;
     }
@@ -23,17 +38,19 @@ window.onload = async function () {
         currency = window.currentCurrency;
     }
 
-    let formatMoneyConfig = {
-        symbol: currency.symbol
+    let formatMoneyConfig =(price)=> {
+        return {
+            symbol: currency.symbol,
+            precision: price>1?2:7
+        }
     }
     document.addEventListener('currencyChange',function (){
         currency = window.currentCurrency;
         formatMoneyConfig.symbol = currency.symbol;
-        populateTable(rawData,limit);
+        populateTable(rawData,localCoinsLimit);
     })
 
-    // Api filters
-    let offset = 0, limit = 100;
+
 
     // Table parts that need to be re attached after table population.
     const tableHeader = table.querySelector(".table-row");
@@ -52,6 +69,7 @@ window.onload = async function () {
         const key = el.target.dataset.sort;
         const column = el.target;
         let descending = false;
+        let depth = key==="rank"?[]:["quotes","USD"]
         table.querySelectorAll(".active").forEach(el => el.classList.remove("active"))
         if (column.classList.contains("down")) {
             column.classList.remove("down");
@@ -61,7 +79,7 @@ window.onload = async function () {
             column.classList.remove("up");
             column.classList.add("down", "active");
         }
-        populateTable(sortTableByKey(key, ["quotes","USD"],rawData, descending))
+        populateTable(sortTableByKey(key, depth,rawData, descending))
     }
 
     async function fetchHomePosts() {
@@ -74,8 +92,8 @@ window.onload = async function () {
 
         posts.forEach(post => {
             let coinName =  post.acf.post_name.trim().replaceAll(" ","-");
-            let coinId = post.acf.post_short_name_connected_to_api.split("-")[0] +"-" + coinName.toLowerCase();
-            coinPosts[coinId] = post
+            let coinId = post.acf.post_short_name_connected_to_api.split("-")[0] +"-" + coinName;
+            coinPosts[coinId.toLowerCase()] = post
         });
     }
 
@@ -102,16 +120,24 @@ window.onload = async function () {
                     dataObjected[coin.id.split("-")[1]] = coin;
                 })
                 rawData =manipulatedData;
-                populateTable(manipulatedData,limit);
+                if("undefined"!==typeof defaultSort){
+                    populateTable(sortTableByKey(defaultSort,[],manipulatedData,true),localCoinsLimit);
+                }
+                populateTable(manipulatedData,localCoinsLimit);
             }).then(()=>{
             initWebsocket()
         })
             .catch(error => console.log('error', error));
     }
 
-    function populateTable(data,limit=100) {
-        let formatMoneyConfig = {
-            symbol: currency.symbol
+    function populateTable(data,limit) {
+        if(!limit)limit = localCoinsLimit;
+        let formatMoneyConfig =(price)=>{
+
+            return  {
+                symbol: currency.symbol,
+                precision:price>1?2:6
+            }
         }
         let populatedHtml = table.querySelector(".table-row").outerHTML;
 
@@ -126,59 +152,60 @@ window.onload = async function () {
         }
 
         function getCoinImage(coin) {
+            let image = 'https://static.coincap.io/assets/icons/'+ coin.symbol.toLowerCase() +'@2x.png';
             if (coin.id && fetchCoinIds===true && coinPosts[coin.id] ) {
-                const image = coinPosts[coin.id].acf.post_image;
-                return `<div style="display: flex"><img src="${image}" height="30"  /><span style="margin: auto 0.3rem">${coin.name}</span></div>`
+                image = coinPosts[coin.id].acf.post_image;
             }
-            return `<div>${coin.name}</div>`;
+            return `<div style="display: flex"><img src="${image}" height="30"  /><span style="margin: auto 0.3rem">${coin.name}</span></div>`
         }
 
         function getWrapperLink(placement, coin) {
+            let link = `${window.location.origin}/${coin.symbol.toLowerCase()} `
             if (coin && fetchCoinIds===true && coinPosts[coin.id]) {
-                return placement === "up" ?
-                    `<a href="${coinPosts[coin.id].link}" >`
-                    : "</a>"
+                link = coinPosts[coin.id].link;
             }
-            return  ""
+                return placement === "up" ?
+                    `<a class="no-decoration no-color" href="${link}" >`
+                    : "</a>"
         }
 
-        for (let i = 0; i <= limit&&i<Object.keys(dataObjected).length; i++) {
+        for (let i = 0; i < limit&&i<Object.keys(dataObjected).length; i++) {
             const coin = data[i];
             const priceData = coin.quotes.USD;
 
             populatedHtml += `
                   
                     <div class="table-row ">
+                                  ${getWrapperLink("up", coin)}
                             <div class="content">
                                 <div class="counter">
-                                               <div>${i + 1}</div>
+                                               <div>${coin.rank}</div>
                                                
                                 </div>
                                 <div class="long">
-                                  ${getWrapperLink("up", coin)}
                                                ${getCoinImage(coin)}
-                                ${getWrapperLink("down", coin)}
                                 </div>
                                 <div class="short">
                                                <div>${coin.symbol}</div>
                                 </div>
                                 ${getTranslatedColumn(coin)}
                                 <div class="price" data-coin="${coin.id.split("-")[1]}">
-                                               <div>${accounting.formatMoney(convertToCurrency(priceData.price), formatMoneyConfig)} </div>
+                                               <div>${accounting.formatMoney(convertToCurrency(priceData.price), formatMoneyConfig(convertToCurrency(priceData.price)))} </div>
 
                                 </div>
                                 <div class="mktcap">
-                                                <div>${accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig )} </div>
+                                                <div>${accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig(convertToCurrency(priceData.market_cap)) )} </div>
 
                                 </div>
                                 <div class="usdVolume">
-                                                <div>${accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig)} </div>
+                                                <div>${accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig(convertToCurrency(priceData.volume_24h)))} </div>
 
                                 </div>
                                 <div class="cap24hrChange">
                                     <div style="direction: ltr;text-align: right">${accounting.toFixed(priceData.percent_change_24h, 2)}% </div>
                                 </div>
                             </div>
+                                ${getWrapperLink("down", coin)}
                         </div>
            
 
@@ -196,7 +223,9 @@ window.onload = async function () {
         })
         const loadMoreBtn =  document.querySelector(".load-more.butt");
         if(loadMoreBtn){
-            console.log("found and should add event")
+            if(localIncreaseLimit&&numberUnfolds>=unfoldsThreshold){
+                loadMoreBtn.innerHTML = `הצג ${increaseStep} נוספים `;
+            }
             loadMoreBtn.addEventListener("click", fetchMore);
         }
 
@@ -230,7 +259,7 @@ window.onload = async function () {
                         }
                     }
 
-                    coinPrice.innerHTML = `<div>${accounting.formatMoney(convertToCurrency(value), formatMoneyConfig)} </div>`;
+                    coinPrice.innerHTML = `<div>${accounting.formatMoney(convertToCurrency(value), formatMoneyConfig(convertToCurrency(value)))} </div>`;
                     if (oldValue) {
                         const upColor = "rgba(24, 198, 131, 0.19) none repeat scroll 0% 0%";
                         const downColor = "rgba(244, 67, 54, 0.19) none repeat scroll 0% 0%";
@@ -275,14 +304,23 @@ window.onload = async function () {
 
 
     function fetchMore() {
-        console.log("Fetch more called")
-        limit += 100;
-        populateTable(rawData,limit)
+        numberUnfolds++;
+        if(localIncreaseLimit&&numberUnfolds>unfoldsThreshold){
+                step = increaseStep
+        }
+        localCoinsLimit += step;
+        populateTable(rawData,localCoinsLimit)
     }
 
     function convertToCurrency(priceInUsd){
         return parseFloat(priceInUsd) * parseFloat(currency.rate);
     }
-
+    // function formatMoney(money,config){
+    //     if(money<1){
+    //
+    //     }else{
+    //         return accounting.formatMoney(price,config);
+    //     }
+    // }
 
 }

@@ -161,30 +161,36 @@ $(document).ready(function () {
 
     document.addEventListener('currencyChange',function (){
         currency = window.currentCurrency;
-        populateCoinFields(rawData);
-        updateChart(getData);
+        if(Object.keys(rawData).length>0){
+
+            populateCoinFields(rawData);
+            updateChart(getData);
+        }
     })
 
     function populateCoinFields(data) {
-            let formatMoneyConfig = {
-                symbol: currency.symbol
+        let formatMoneyConfig =(price)=> {
+            return {
+                symbol: currency.symbol,
+                precision: price>1?2:7
             }
+        }
             const priceData = data.quotes.USD;
             currentPrice = priceData.price;
             let displayPrice = convertToCurrency(currentPrice);
-            $('.parametr.usdVolume .value').html(accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig));
+            $('.parametr.usdVolume .value').html(accounting.formatMoney(convertToCurrency(priceData.volume_24h), formatMoneyConfig(convertToCurrency(priceData.volume_24h))));
             $('.parametr.vwap_h24 .value').html('' + accounting.formatNumber(priceData.volume_24h_change_24h, 3, ",", "."));
             $('.parametr.supply .value').html(accounting.formatNumber(data.total_supply, 0, ",", "."));
 
-            $('.parametr.mktcap .value').html( accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig));
+            $('.parametr.mktcap .value').html( accounting.formatMoney(convertToCurrency(priceData.market_cap),formatMoneyConfig(convertToCurrency(priceData.market_cap))));
 
             $('.parametr.rank .value').html(data.rank);
 
-            $('.hidden-stats .price .value').html(accounting.formatMoney(displayPrice, formatMoneyConfig));
+            $('.hidden-stats .price .value').html(accounting.formatMoney(displayPrice, formatMoneyConfig(displayPrice)));
 
             $('.hidden-pop-for-add form input[name=price]').val(displayPrice);
 
-            $('.head-stats .price .value').html(accounting.formatMoney(displayPrice,formatMoneyConfig));
+            $('.head-stats .price .value').html(accounting.formatMoney(displayPrice,formatMoneyConfig(displayPrice)));
             const changePercent24hr =accounting.toFixed(priceData.percent_change_24h,5);
             $('.head-stats .cap24hrChange .value').html(changePercent24hr+'%');
 
@@ -236,14 +242,19 @@ $(document).ready(function () {
         var pricesWs = new WebSocket(`wss://ws.coincap.io/prices?assets=${coinName}`)
 
         pricesWs.onmessage = function (msg) {
-            let formatMoneyConfig = {
-                symbol: currency.symbol
+
+            let formatMoneyConfig =(price)=> {
+                return {
+                    symbol: currency.symbol,
+                    precision: price>1?2:7
+                }
             }
+
             const price = JSON.parse(msg.data)
 
             let p = $('.head-stats .price .value');
 
-            $(p).html(accounting.formatMoney(convertToCurrency(price[coinName]),formatMoneyConfig ));
+            $(p).html(accounting.formatMoney(convertToCurrency(price[coinName]),formatMoneyConfig(convertToCurrency(price[coinName])) ));
             let className = currentPrice>price[coinName]?"#fe5a6e":"#16debb";
             currentPrice = price[coinName];
             $(p).css("color",className);
